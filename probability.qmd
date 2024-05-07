@@ -1,7 +1,60 @@
 # Introduction to Probability
 
-In summary, this book has no content whatsoever.
+Why collect replicates of the same exact data? The (in)famous definition of insanity, "Doing something over and over again and expecting a different result", would seem to classify replication as crazy. Except, anyone who has ever collected any kind of data has an intuition for why replication is important: Each replicate is always different from the last. Somehow, despite following a precise protocol in a particular lab with the same reagents, pipettes, measuring devices, etc., each replicate yields a different result. **There is randomness in your data**.
+
+This randomness throws a wrench in naive data analyses. In biology, we are often measuring something (e.g., the concentration of an interesting molecule, the viability of an organism, etc.) in two or more "conditions" (e.g., with and without drug) and assessing whether or not any of our measurements differ from one another. If every replicate of an experiment yielded the same data, this task would be trivial. Just take one measurement in each condition, compare the measurements, and draw conclusions. If the measurements differ, the thing you are measuring differs. If the measurements are identical, the thing you are measuring is unaffected by your perturbations. The randomness of data forces us to consider an alternative conclusion. What if our measurements differ, not because the thing we are measuring is changing, but because our measurements fluctuate from experiment-to-experiment? How do we know what differences are real and what differences are the result of this randomness?
+
+The answer discussed in this chapter is **probability theory**. Probability theory is a field of mathematics that gives us the tools to think about and quantify this randomness. This chapter will introduce you to the key instrument provided by this field: the probability distribution. With this tool, we will be able to describe and better understand the random fluctuations that plague our data.
+
+## The Many Flavors of Randomness
+
+## Appendix: Probability Distributions
+
+When I claim that "there is randomness in your data", what does that mean? For some people, the term "randomness" implies complete unpredictability. Such people would interpret my claim to mean that every time you collect a new replicate, any value for the thing you are measuring is fair game and equally likely. "You got 100 reads from the MYC gene in your last RNA-seq dataset? Well don't be surprised if you get 1000, or 10000, or 0 reads next time!" You may call this **uniform randomness**. You can generate such data right here in R, using the `runif()` function:
 
 ```{r}
-1 + 1
+data <- runif(n = 10, min = 0, max = 100)
+
+hist(data)
+
+# Check out the individual data points
+print(data)
 ```
+
+`runif()` has three parameters: 1) `n` specifies the number of numbers to generate, 2) `min` specifies the minimum number it could possibly generate, and 3) `max` specifies the maximum number it could possibly generate. In the above example, I am thus creating 10 numbers between 0 and 100, with every number in between being equally likely to pop out. Generate a lot more numbers and this uniform pattern of appearance becomes much more clear:
+
+```{r}
+data <- runif(n = 1000, min = 0, max = 100)
+
+hist(data)
+
+```
+
+While this definition of randomness is intuitive, it can't be the only type of randomness. If RNA-seq data were this random, it would be useless! There is nothing to learn from measurements that can take on any value with equal probability. 
+
+Thus, to describe all of the kinds of randomness we see in the real world, it is important to expand our definition beyond uniform randomness. Enter the **probability distribution**. A probability distribution is like a function in R. It takes as input a number (or maybe a set of numbers), and provides as output, the probability of seeing that number. For uniformly random data this might look something like:
+
+```{r}
+uniform_distribution <- function(data, min = 0, max = 100){
+  
+  if(data >= min & data <= max){
+    
+    output <- 1
+    
+  }else{
+    
+    output <- 0
+    
+  }
+  
+  return(output)
+  
+}
+```
+
+That is to say, as long as the data is within the bounds of what is possible, it has the same probability of occuring; you get the same number out from this function. This function would make mathematicians 
+
+
+
+
+

@@ -36,7 +36,7 @@
     "href": "probability.html",
     "title": "3  Introduction to Probability",
     "section": "",
-    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "text": "3.1 The Many Flavors of Randomness\nWhen I claim that “there is randomness in your data”, what does that mean? For some people, the term “randomness” implies complete unpredictability. Such people would interpret my claim to mean that every time you collect a new replicate, any value for the thing you are measuring is fair game and equally likely. “You got 100 reads from the MYC gene in your last RNA-seq dataset? Well don’t be surprised if you get 1000, or 10000, or 0 reads next time!” You may call this uniform randomness. You can generate such data right here in R, using the runif() function:\ndata &lt;- runif(n = 10, min = 0, max = 100)\n\nprint(data)\n\n [1] 18.18388 20.62220 50.04539 59.10880 27.92509 84.69741 59.27110 63.88585\n [9] 63.12372 63.59976\nrunif() has three parameters: 1) n specifies the number of numbers to generate, 2) min specifies the minimum number it could possibly generate, and 3) max specifies the maximum number it could possibly generate. In the above example, I am thus creating 10 numbers between 0 and 100, with every number in between being equally likely to pop out. Generate a lot more numbers and this uniform pattern of appearance becomes much more clear:\ndata &lt;- runif(n = 1000, min = 0, max = 100)\n\nhist(data)",
     "crumbs": [
       "Necessary Introduction",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Introduction to Probability</span>"
