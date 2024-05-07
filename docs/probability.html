@@ -256,6 +256,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#the-many-flavors-of-randomness" id="toc-the-many-flavors-of-randomness" class="nav-link active" data-scroll-target="#the-many-flavors-of-randomness"><span class="header-section-number">3.1</span> The Many Flavors of Randomness</a></li>
+  <li><a href="#appendix-probability-distributions" id="toc-appendix-probability-distributions" class="nav-link" data-scroll-target="#appendix-probability-distributions"><span class="header-section-number">3.2</span> Appendix: Probability Distributions</a></li>
   </ul>
 </nav>
     </div>
@@ -286,21 +287,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The answer discussed in this chapter is <strong>probability theory</strong>. Probability theory is a field of mathematics that gives us the tools to think about and quantify this randomness. This chapter will introduce you to the key instrument provided by this field: the probability distribution. With this tool, we will be able to describe and better understand the random fluctuations that plague our data.</p>
 <section id="the-many-flavors-of-randomness" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="the-many-flavors-of-randomness"><span class="header-section-number">3.1</span> The Many Flavors of Randomness</h2>
+<p>Trajectory: 1) In biology, everything is complicated and every system you study seems unique. 2) To tackle this complexity, we group things into bins based on important characteristics that they share, and then try and understand the patterns that govern each bin. 3) Similarly in statistics, every kind of data seems different and to suffer from its own sources of variance. 4) We notice though, that there are patterns in the types of randomness we commonly see. We thus focus on understanding these common patterns and apply them to understanding our unique data. 5) The patterns in randomness that we observe are coined “probability distributions”. Think of them as functions, which take as input a number, and provide as output the probability of observing that number (or a tiny range of numbers around that number). 6) These functions could take any shape you dream up, but as mentioned, particular patterns crop up all of the time. In this class, we are going to explore these patterns and understand what gives rise to them. 7) One way to think about a probability distribution is as specifying a strategy to randomly generate data that follows a particular pattern of randomness. The height of the function at any point determines how likely you should be to draw that particular number. 8) Such random number generators exist in R, and generate data that follow a number of the most common patterns we see in the real world. This exercise walks you through each of these and helps you make connections between them, and to begin to understand the origin of the patterns you’ll see.</p>
+<p>Random number generators to assess: - rnorm() - rbinom() - runif() - rbeta() - rgamma() - rexp() - rlnorm() - rnbinom() - rgeom() - rhypergeom() - rpois()</p>
+</section>
+<section id="appendix-probability-distributions" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="appendix-probability-distributions"><span class="header-section-number">3.2</span> Appendix: Probability Distributions</h2>
 <p>When I claim that “there is randomness in your data”, what does that mean? For some people, the term “randomness” implies complete unpredictability. Such people would interpret my claim to mean that every time you collect a new replicate, any value for the thing you are measuring is fair game and equally likely. “You got 100 reads from the MYC gene in your last RNA-seq dataset? Well don’t be surprised if you get 1000, or 10000, or 0 reads next time!” You may call this <strong>uniform randomness</strong>. You can generate such data right here in R, using the <code>runif()</code> function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="probability_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check out the individual data points</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 18.18388 20.62220 50.04539 59.10880 27.92509 84.69741 59.27110 63.88585
- [9] 63.12372 63.59976</code></pre>
+<pre><code> [1] 55.877006 64.225482 22.372042 40.712162 68.960334 36.841703 94.569523
+ [8] 18.076741 75.133792  8.500434</code></pre>
 </div>
 </div>
 <p><code>runif()</code> has three parameters: 1) <code>n</code> specifies the number of numbers to generate, 2) <code>min</code> specifies the minimum number it could possibly generate, and 3) <code>max</code> specifies the maximum number it could possibly generate. In the above example, I am thus creating 10 numbers between 0 and 100, with every number in between being equally likely to pop out. Generate a lot more numbers and this uniform pattern of appearance becomes much more clear:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n =</span> <span class="dv">1000</span>, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="at">n =</span> <span class="dv">1000</span>, <span class="at">min =</span> <span class="dv">0</span>, <span class="at">max =</span> <span class="dv">100</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -309,6 +324,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>While this definition of randomness is intuitive, it can’t be the only type of randomness. If RNA-seq data were this random, it would be useless! There is nothing to learn from measurements that can take on any value with equal probability.</p>
+<p>Thus, to describe all of the kinds of randomness we see in the real world, it is important to expand our definition beyond uniform randomness. Enter the <strong>probability distribution</strong>. A probability distribution is like a function in R. It takes as input a number (or maybe a set of numbers), and provides as output, the probability of seeing that number. For uniformly random data this might look something like:</p>
+<p>uniform_distribution &lt;- function(data, min = 0, max = 100){</p>
+<p>if(data &gt;= min &amp; data &lt;= max){</p>
+<pre><code>output &lt;- 1</code></pre>
+<p>}else{</p>
+<pre><code>output &lt;- 0</code></pre>
+<p>}</p>
+<p>return(output)</p>
+<p>} ```it ad</p>
+<p>That is to say, as long as the data is within the bounds of what is possible, it has the same probability of occuring; you get the same number out from this function. This function would make mathematicians</p>
 
 
 </section>
