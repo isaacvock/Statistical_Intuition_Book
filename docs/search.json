@@ -38,5 +38,105 @@
     "crumbs": [
       "References"
     ]
+  },
+  {
+    "objectID": "lm.html",
+    "href": "lm.html",
+    "title": "6  Linear Modeling",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "rnaseq.html",
+    "href": "rnaseq.html",
+    "title": "1  Introduction to RNA-seq",
+    "section": "",
+    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to RNA-seq</span>"
+    ]
+  },
+  {
+    "objectID": "intro2R.html",
+    "href": "intro2R.html",
+    "title": "2  Introduction to R",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Introduction to R</span>"
+    ]
+  },
+  {
+    "objectID": "probability.html",
+    "href": "probability.html",
+    "title": "3  Introduction to Probability",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Introduction to Probability</span>"
+    ]
+  },
+  {
+    "objectID": "modeling.html",
+    "href": "modeling.html",
+    "title": "4  Introduction to Statistical Modeling",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Introduction to Statistical Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "hypothesis.html",
+    "href": "hypothesis.html",
+    "title": "5  Hypothesis Testing",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Hypothesis Testing</span>"
+    ]
+  },
+  {
+    "objectID": "dreduce.html",
+    "href": "dreduce.html",
+    "title": "7  Dimensionality Reduction",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Dimensionality Reduction</span>"
+    ]
+  },
+  {
+    "objectID": "cluster.html",
+    "href": "cluster.html",
+    "title": "8  Clustering and Mixture Modeling",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Clustering and Mixture Modeling</span>"
+    ]
+  },
+  {
+    "objectID": "bioinfo.html",
+    "href": "bioinfo.html",
+    "title": "9  Practical Bioinformatics",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Practical Bioinformatics</span>"
+    ]
+  },
+  {
+    "objectID": "finalproject.html",
+    "href": "finalproject.html",
+    "title": "10  Analysis of an RNA-seq dataset",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Analysis of an RNA-seq dataset</span>"
+    ]
   }
 ]
