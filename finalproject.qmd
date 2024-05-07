@@ -1,0 +1,7 @@
+# Analysis of an RNA-seq dataset
+
+In summary, this book has no content whatsoever.
+
+```{r}
+1 + 1
+```

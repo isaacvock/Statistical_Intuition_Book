@@ -1,4 +1,4 @@
-# Introduction
+# Introduction to RNA-seq
 
 This is a book created from markdown and executable code.
 

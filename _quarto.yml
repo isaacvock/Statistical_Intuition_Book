@@ -1,5 +1,6 @@
 project:
   type: book
+  output-dir: docs
 
 book:
   title: "Statistical Intuition for Modern Biologists"
@@ -7,8 +8,16 @@ book:
   date: "5/7/2024"
   chapters:
     - index.qmd
-    - intro.qmd
-    - summary.qmd
+    - rnaseq.qmd
+    - intro2R.qmd
+    - probability.qmd
+    - modeling.qmd
+    - hypothesis.qmd
+    - lm.qmd
+    - dreduce.qmd
+    - cluster.qmd
+    - bioinfo.qmd
+    - finalproject.qmd
     - references.qmd
 
 bibliography: references.bib
