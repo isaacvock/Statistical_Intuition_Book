@@ -8,16 +8,22 @@ book:
   date: "5/7/2024"
   chapters:
     - index.qmd
-    - rnaseq.qmd
-    - intro2R.qmd
-    - probability.qmd
-    - modeling.qmd
-    - hypothesis.qmd
-    - lm.qmd
-    - dreduce.qmd
-    - cluster.qmd
-    - bioinfo.qmd
-    - finalproject.qmd
+    - part: intro.qmd
+      chapters: 
+        - rnaseq.qmd
+        - intro2R.qmd
+        - probability.qmd
+        - modeling.qmd
+    - part: methods.qmd
+      chapters: 
+        - hypothesis.qmd
+        - lm.qmd
+        - dreduce.qmd
+        - cluster.qmd
+    - part: pragmatic.qmd
+      chapters:
+        - bioinfo.qmd
+        - finalproject.qmd
     - references.qmd
 
 bibliography: references.bib

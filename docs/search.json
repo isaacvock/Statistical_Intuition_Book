@@ -16,6 +16,7 @@
     "section": "",
     "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
     "crumbs": [
+      "Necessary Introduction",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction to RNA-seq</span>"
     ]
   },
@@ -26,6 +27,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Necessary Introduction",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Introduction to R</span>"
     ]
   },
@@ -36,6 +38,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Necessary Introduction",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Introduction to Probability</span>"
     ]
   },
@@ -46,6 +49,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Necessary Introduction",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Introduction to Statistical Modeling</span>"
     ]
   },
@@ -56,6 +60,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Popular Methods",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Hypothesis Testing</span>"
     ]
   },
@@ -66,6 +71,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Popular Methods",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Linear Modeling</span>"
     ]
   },
@@ -76,6 +82,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Popular Methods",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Dimensionality Reduction</span>"
     ]
   },
@@ -86,6 +93,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Popular Methods",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Clustering and Mixture Modeling</span>"
     ]
   },
@@ -96,6 +104,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Statistics in the Wild",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Practical Bioinformatics</span>"
     ]
   },
@@ -106,6 +115,7 @@
     "section": "",
     "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
     "crumbs": [
+      "Statistics in the Wild",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Analysis of an RNA-seq dataset</span>"
     ]
   },
