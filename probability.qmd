@@ -614,7 +614,7 @@ distribution.
 **Generative Model**: Like with the binomial distribution, imagine you have an event that can result in two possible outcomes, and the probability of a particular outcome is exactly the same from event to event. The number of events until you see until the nth success will follow a negative binomial distribution.
 
 **Spoiler alert**: We'll see the negative binomial later, but it will take
-on a very different chracter, acting as a generalization of the Poisson distribution rather than of the geometric distribution. This just goes to show that these distributions can wear many hats and will often have many distinct back stories.
+on a very different character, acting as a generalization of the Poisson distribution rather than of the geometric distribution. This just goes to show that these distributions can wear many hats and will often have many distinct back stories.
 
 #### Exercises
 
