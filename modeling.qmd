@@ -210,4 +210,58 @@ What does this value represent though. First, let's understand its input:
 2. `size`: Same as in `rbinom()`, the number of trials.
 3. `prob`: Same as in `rbinom()`, the probability that each trial is a success.
 
-So it seems to quantify something about a particular possible outcome of `rbinom()`. It assigns some number to an outcome given the parameters you could have used to simulate such an outcome. What does this number represent though?
+So it seems to quantify something about a particular possible outcome of `rbinom()`. It assigns some number to an outcome given the parameters you could have used to simulate such an outcome. What does this number represent though? To find out, let's plot it for a range of `x`'s:
+
+```{r}
+xs <- 0:100
+ds <- dbinom(xs, 100, 0.5)
+
+tibble(x = xs,
+       d = ds) %>%
+  ggplot(aes(x = x, y = d)) + 
+  geom_point() + 
+  theme_classic()
+```
+
+Values closer to 50 get higher numbers than values further from 50, and the plot
+seems to be symmetric around 50. What's significant about 50? It's $$size * prob$$,
+or the average value we would expect to get from `rbinom()` with these parameters!
+
+This investigation should give you some sense that the output of `dbinom()` is 
+in some way related to the probability of seeing `x` given a certain `size` and
+`prob`. Is it exactly this probability? We can gut check by assessing some cases
+we know for certain. Like, what is the probability of seeing 1 success in 1 trial
+if `prob` = 0.5? 0.5, because that's the defintiion of prob! What does `dbinom()`
+give us in this scenario:
+
+```{r}
+dbinom(1, 1, 0.5)
+```
+
+0.5; that's a good sign that we are on to something. Try out some different values
+of `prob`:
+
+```{r}
+dbinom(1, 1, 0.3)
+dbinom(1, 1, 0.7)
+dbinom(1, 1, 0.2315)
+```
+
+Everything still checks out. How about the probability of 2 successes in 2 trials
+given a certain `prob`? Each trial has probability of `prob` of being a success,
+and each trial is independent. Therefore, the probability of 2 successes in 2 trials
+is $$prob * prob$$. Does `dbinom()` give us the same output in that case?
+
+```{r}
+# Expecting 0.25
+dbinom(2, 2, 0.5)
+
+# Expecting 0.01
+dbinom(2, 2, 0.1)
+```
+
+Sure thing! 
+
+**Conclusion**: `dbinom(x, size, prob)`, tells us the probability of seeing
+`x` successes in `size` trials given the probability of a success is `prob`.
+
