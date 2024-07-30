@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -251,7 +217,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#discovering-nhst" id="toc-discovering-nhst" class="nav-link active" data-scroll-target="#discovering-nhst"><span class="header-section-number">6</span> Discovering NHST</a>
+  <ul class="collapse">
+  <li><a href="#classic-example-the-fair-coin" id="toc-classic-example-the-fair-coin" class="nav-link" data-scroll-target="#classic-example-the-fair-coin"><span class="header-section-number">6.1</span> Classic example: the fair coin</a>
+  <ul class="collapse">
+  <li><a href="#step-1-collect-some-data" id="toc-step-1-collect-some-data" class="nav-link" data-scroll-target="#step-1-collect-some-data"><span class="header-section-number">6.1.1</span> Step 1: Collect some data</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#performing-common-tests" id="toc-performing-common-tests" class="nav-link" data-scroll-target="#performing-common-tests"><span class="header-section-number">7</span> Performing common tests</a>
+  <ul class="collapse">
+  <li><a href="#z-test" id="toc-z-test" class="nav-link" data-scroll-target="#z-test"><span class="header-section-number">7.1</span> Z-test</a></li>
+  <li><a href="#t-test" id="toc-t-test" class="nav-link" data-scroll-target="#t-test"><span class="header-section-number">7.2</span> T-test</a></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova"><span class="header-section-number">7.3</span> ANOVA</a></li>
+  <li><a href="#non-parametric-tests" id="toc-non-parametric-tests" class="nav-link" data-scroll-target="#non-parametric-tests"><span class="header-section-number">7.4</span> Non-parametric tests</a></li>
+  <li><a href="#custom-nshting" id="toc-custom-nshting" class="nav-link" data-scroll-target="#custom-nshting"><span class="header-section-number">7.5</span> Custom NSHTing</a></li>
+  </ul></li>
+  <li><a href="#challenges" id="toc-challenges" class="nav-link" data-scroll-target="#challenges"><span class="header-section-number">8</span> Challenges</a>
+  <ul class="collapse">
+  <li><a href="#multiple-test-adjustment" id="toc-multiple-test-adjustment" class="nav-link" data-scroll-target="#multiple-test-adjustment"><span class="header-section-number">8.1</span> Multiple-test adjustment</a></li>
+  <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power"><span class="header-section-number">8.2</span> Power</a></li>
+  <li><a href="#miscalibration" id="toc-miscalibration" class="nav-link" data-scroll-target="#miscalibration"><span class="header-section-number">8.3</span> Miscalibration</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -275,15 +267,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In summary, this book has no content whatsoever.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
+<p>The last two chapters discussed how to model randomness in data. In this process, we can obtain parameter estimates that describe some aspect of the biological systems we study. Often, we have hypotheses about what parameter values we expected, or what certain parameter values tell us about our system of interest. How do we go from the output of a statistical model to “conclusions” regarding these hypotheses? One popular (albeit flawed) method for doing so is Null Hypothesis Statistical Testing (NHST) and is the topic of this chapter.</p>
+<section id="discovering-nhst" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Discovering NHST</h1>
+<p>We are going to go through a collection of exercises that will help you discover the concept of NHST on your own. On this journey, you will also become acutely aware of the limitations of this method, and thus be better prepared to carefully interpret the output of an NHST analysis.</p>
+<section id="classic-example-the-fair-coin" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="classic-example-the-fair-coin"><span class="header-section-number">6.1</span> Classic example: the fair coin</h2>
+<p>Imagine you have a coin, and you would like to test the hypothesis, “is this coin fair?”. A “fair” coin is one that when flipped, is equally likely to come up heads or tails.</p>
+<p>We can cast this question in the language of statistical modeling. If we assume that each coin flip is independent (e.g., the last outcome does not influence the next) and that the probability of heads is unchanged from flip to flip, then we can model the number of heads as following a binomial distribution. We know how many times we flip the coin, so there is one unknown parameter, <code>prob</code>, which represents the probability of seeing a head. A fair coin is one in which <code>prob</code> = 0.5. In this framing, our task is to determine whether or not the “true <code>prob</code>” for our coin is exactly 0.5.</p>
+<p>How should we go about answering this question?</p>
+<section id="step-1-collect-some-data" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="step-1-collect-some-data"><span class="header-section-number">6.1.1</span> Step 1: Collect some data</h3>
+<p>The only way we can begin to tell if the coin is fair or not is to flip it!</p>
+</section>
+</section>
+</section>
+<section id="performing-common-tests" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Performing common tests</h1>
+<section id="z-test" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="z-test"><span class="header-section-number">7.1</span> Z-test</h2>
+</section>
+<section id="t-test" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="t-test"><span class="header-section-number">7.2</span> T-test</h2>
+</section>
+<section id="anova" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="anova"><span class="header-section-number">7.3</span> ANOVA</h2>
+</section>
+<section id="non-parametric-tests" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="non-parametric-tests"><span class="header-section-number">7.4</span> Non-parametric tests</h2>
+</section>
+<section id="custom-nshting" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="custom-nshting"><span class="header-section-number">7.5</span> Custom NSHTing</h2>
+</section>
+</section>
+<section id="challenges" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Challenges</h1>
+<section id="multiple-test-adjustment" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="multiple-test-adjustment"><span class="header-section-number">8.1</span> Multiple-test adjustment</h2>
+</section>
+<section id="power" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="power"><span class="header-section-number">8.2</span> Power</h2>
+</section>
+<section id="miscalibration" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="miscalibration"><span class="header-section-number">8.3</span> Miscalibration</h2>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

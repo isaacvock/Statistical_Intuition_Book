@@ -1,0 +1,30 @@
+# Differential Expression Analysis
+
+In summary, this book has no content whatsoever.
+
+```{r}
+1 + 1
+```
+
+
+## Performing your own differential expression analysis
+
+### Decide on a model
+
+### Fit the model
+
+### Interpret the model
+
+#### Hypothesis test
+
+#### Testing the output
+
+
+## How we actually do differential expression analysis
+
+
+### DESeq2
+
+### Design matrices
+
+### Secret sauce: variance regularization

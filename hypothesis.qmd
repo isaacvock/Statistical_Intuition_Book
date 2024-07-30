@@ -1,7 +1,44 @@
 # Hypothesis Testing
 
-In summary, this book has no content whatsoever.
+The last two chapters discussed how to model randomness in data. In this process, we can obtain parameter estimates that describe some aspect of the biological systems we study. Often, we have hypotheses about what parameter values we expected, or what certain parameter values tell us about our system of interest. How do we go from the output of a statistical model to "conclusions" regarding these hypotheses? One popular (albeit flawed) method for doing so is Null Hypothesis Statistical Testing (NHST) and is the topic of this chapter.
 
-```{r}
-1 + 1
-```
+
+# Discovering NHST
+
+We are going to go through a collection of exercises that will help you discover the concept of NHST on your own. On this journey, you will also become acutely aware of the limitations of this method, and thus be better prepared to carefully interpret the output of an NHST analysis.
+
+
+## Classic example: the fair coin
+
+Imagine you have a coin, and you would like to test the hypothesis,
+"is this coin fair?". A "fair" coin is one that when flipped, is equally likely to come up heads or tails. 
+
+We can cast this question in the language of statistical modeling. If we assume that each coin flip is independent (e.g., the last outcome does not influence the next) and that the probability of heads is unchanged from flip to flip, then we can model the number of heads as following a binomial distribution. We know how many times we flip the coin, so there is one unknown parameter, `prob`, which represents the probability of seeing a head. A fair coin is one in which `prob` = 0.5. In this framing, our task is to determine whether or not the "true `prob`" for our coin is exactly 0.5.
+
+How should we go about answering this question?
+
+### Step 1: Collect some data
+
+The only way we can begin to tell if the coin is fair or not is to flip it! 
+
+
+# Performing common tests
+
+## Z-test
+
+## T-test
+
+## ANOVA
+
+## Non-parametric tests
+
+## Custom NSHTing
+
+
+# Challenges
+
+## Multiple-test adjustment
+
+## Power
+
+## Miscalibration
