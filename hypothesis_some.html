@@ -111,11 +111,17 @@ window.Quarto = {
 
 <section id="why-p-values-suck-and-why-i-still-use-them" class="level1">
 <h1>Why p-value’s suck, and why I still use them</h1>
-</section>
-<section id="does-your-data-support-your-hypothesis" class="level1">
-<h1>Does your data support your hypothesis?</h1>
-<p><insert profound="" introduction="" here=""></insert></p>
-<p>Your task, if you choose to accept it, is to answer the question that titles this section: “Does your data support your hypothesis?”. In this post, we are going to journey to the depths of this question to understand the challenges it poses and the ways we can go about tackling it. During this exploration, we will discover null-hypothesis significance testing (NHST), a strategy that dominates almost every field of modern science. What we will find though, is that NHST is not the definitive solution to our quandery. It is a cheap hack that offers us an easy way out at the cost of falling short of our original goal. Despite the imperfections of its solution, it is not without merit though, and we will attempt to understand why it’s ok to give up sometimes.</p>
+<section id="does-your-data-support-your-hypothesis" class="level2">
+<h2 class="anchored" data-anchor-id="does-your-data-support-your-hypothesis">Does your data support your hypothesis?</h2>
+<p>All scientific endeavors can be boiled down to two steps:</p>
+<ol type="1">
+<li>Coming up with a hypothesis about how some aspect of the world works.</li>
+<li>Collecting data to test said hypothesis.</li>
+</ol>
+<p>Maybe you hypothesize that molecule X is a biomarker for a disease (i.e., its presence in an individual suggests that individual has the disease). You could measure the levels of molecule X in healthy and diseased patients to test your hypothesis.</p>
+<p>Maybe you hypothesize that …</p>
+<p>There is a third step which at first may feel like a trivial extension of the second: analyzing your data and drawing a conclusion about your hypothesis. In practice though, this represents an immense challenge. Students are prescribed an algorithm by which to solve this problem, known as null-hypothesis statistical testing. They are taught how to calculate p-values and how to draw conclusions from these p-values. Despite the ubiquitous algorithmization of this process, it has come under increased, heated scrutiny. Some have even accused it of launching a widespread reproducibility crisis plaguing the entire scientific enterprise, and have called for the death of this long extant practice.</p>
+<p>What are these p-values and are they really that evil? To answer this question, we are going to explore the question that titles this section: “Does your data support your hypothesis?”. In this post, we are going to journey to the depths of this question to understand the challenges it poses and the ways we can go about tackling it. During this exploration, we will discover null-hypothesis significance testing (NHST). What we will find though, is that NHST is not the definitive solution to our quandery. It is a cheap hack that offers us an easy way out at the cost of falling short of our original goal. Despite the imperfections of its solution, it is not without merit though, and we will attempt to understand why it’s ok to give up sometimes.</p>
 <p>Throughout this post, I will share some code to reproduce key results and figures. This code is in the loved and hated “programming language” R. If you don’t know how to write and run R, don’t worry, you can still follow along. It might be a fun exercise to pick it up and play around with some of the “simple” code in this post though. If that sounds interesting to you, check out my post on the basics of writing and running R code.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -134,8 +140,8 @@ Running R code
 </div>
 </div>
 </section>
-<section id="the-toy-example-is-this-coin-fair" class="level1">
-<h1>The toy example: is this coin fair?</h1>
+<section id="the-toy-example-is-this-coin-fair" class="level2">
+<h2 class="anchored" data-anchor-id="the-toy-example-is-this-coin-fair">The toy example: is this coin fair?</h2>
 <p>It’s always best to start simple and understand our problem in the context of a toy example. An almost cliche testing ground for hypothesis testing is determining whether or not a coin is fair. Despite being overused, it will serve us well. The scenario is that you are given a coin and asked, “is this coin fair?”. A fair coin is one that when flipped, has an equal probability of showing up heads or tails.</p>
 <p><strong>Take a second to stop and think about how you would try to answer this question.</strong></p>
 <p>Step 1 has to be to collect some data. How can we know if the coin is fair if we have never seen it flipped? The path towards answering any scientific question starts with data collection. As a part of this toy example, it will be useful to work with “simulated data”. This means data that we created with a computer. The great thing about simulated data is that we know everything there is to know about how the data was created. We even know the answer to any question we could hope to ask about said data. In this case, we will “flip” a hypothetical coin 10 times and print the result. You can check out the code if you want to see what this simulation looks like. You can also check out the code if you want to see if this simulated coin is fair or not (how would you tell?):</p>
@@ -161,19 +167,19 @@ Running R code
 <p>So in this simulation, we saw 7 heads and 3 tails.</p>
 <p><strong>Take some time to think about whether this is this strong evidence for or against fairness. How would you answer this question?</strong></p>
 </section>
-<section id="assessing-a-coins-fairness" class="level1">
-<h1>Assessing a coin’s fairness</h1>
+<section id="assessing-a-coins-fairness" class="level2">
+<h2 class="anchored" data-anchor-id="assessing-a-coins-fairness">Assessing a coin’s fairness</h2>
 <p>We have now collected data about our coin. Step 2 is we need to find a way to analyze this data so as to assess whether or not our hypothesis of fairness is supported by the data. To help you arrive at an idea for how to do this, I will pose and discuss answers to a set of questions:</p>
-<section id="can-you-definitively-answer-the-question" class="level2">
-<h2 class="anchored" data-anchor-id="can-you-definitively-answer-the-question">Can you definitively answer the question?</h2>
+<section id="can-you-definitively-answer-the-question" class="level3">
+<h3 class="anchored" data-anchor-id="can-you-definitively-answer-the-question">Can you definitively answer the question?</h3>
 <p>In other words, would it be possible to conclusively state “yes this coin is fair” or “no this coin is unfair” with complete certainty? Put another way, what would need to be true about flipping coins for this to be possible?</p>
 <p>I would argue for this to be the case, we would need a certain kind of behavior from our coin. We would need the behavior of fair coins to always be distinct from that of unfair coins. For example, if fair coins always come up heads between 4 and 6 times when flipped 10 times, and a coin with any amount of unfairness always comes up head &lt; 4 times (if it’s biased towards tails) or &gt; 6 times (if it’s biased towards heads), then we’re set. If we see 4, 5, or 6 heads, we could automatically conclude that the coin is fair. If we see 1, 2, 3, 7, 8, 9, or 10 heads, we could automatically conclude that the coin is unfair. Any overlap in the possible outcomes of fair and unfair coins would mean that if faced with data in this realm of ambiguity, we would have no choice but to concede that we are not 100% certain that the coin is fair or unfair.</p>
 <p>Your intuition is probably telling you that this would be absurd behavior for a coin to follow. What if a coin is only a little bit biased? Let’s say it comes up heads 51% of the time. How crazy would it be for a such a coin to come up heads 4, 5, or 6 out of 10 flips? And on the other side, would you really be that blown away if a fair coin came up heads 7 times?</p>
 <p><strong>Conclusion: We can only answer the fairness question probabilistically</strong></p>
 <p>That is to say, the best we can hope to do is to determine a probability that the hypothesis of fairness is true. This fact holds true for almost all scientific inquiries.</p>
 </section>
-<section id="how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment" class="level2">
-<h2 class="anchored" data-anchor-id="how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment">How can we describe the probability of a given outcome of our experiment?</h2>
+<section id="how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment" class="level3">
+<h3 class="anchored" data-anchor-id="how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment">How can we describe the probability of a given outcome of our experiment?</h3>
 <p>Pondering the possibility of a definitive conclusion, it becomes clear that we need a way to discuss our data in terms of probabilities. We need to be able to assign a probability to any given outcome of our experiment, say 5 heads and 5 tails. In other words, we need to come up with a function that takes as input our data (and whatever else we deem necessary to specify) and produces as output the probability of seeing that data. Let’s call this our data’s “probability function”.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
@@ -196,7 +202,7 @@ Actual terminology
 <li>Each flip of the coin is independent. This means that the probability of seeing a heads on the next flip is unaffected by what you saw on any of your previous flips.</li>
 <li>Every flip has the same probability of coming up heads. Let’s call this probability PH.</li>
 </ol>
-<p>We can then do a bit of math to figure out what this implies about seeing a certain number of heads in a certain number of flips. You can checkout the box below with extra details if you want to see what this looks like. Here, I will just present the final result and then we can explore some of its properties:</p>
+<p>We can then do a bit of math to figure out what this implies about seeing a certain number of heads in a certain number of flips. You can check out the box below with extra details if you want to see what this looks like. Here, I will just present the final result and then we can explore some of its properties:</p>
 <p><span class="math display">\[
 \text{Pr}(\text{H heads in N flips}) = \frac{\text{H}!}{\text{H!}*\text{(N - H)!}} * \text{PH}^{\text{H}} * (1 - \text{PH})^{\text{N} - \text{H}}
 \]</span></p>
@@ -206,22 +212,44 @@ Actual terminology
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-The full derivation
+Reading the equation
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>Before exploring its properties, it may be helpful to walk through each part of this equation and understand what it means:</p>
+<ol type="1">
+<li><span class="math inline">\(\text{Pr}(\text{H heads in N flips})\)</span>: This should be read as “the probability of seeing H heads in N flips”. A more rigorous way to write this would have been Pr(H heads | N flips, PH), which should be read as “the probability of seeing H heads <strong>given</strong> I flipped the coin N times and the probability of heads was PH”. A “|” in probability means assume the things to the right of it are true, and thus translates to “given”. PH and N are referred to as parameters, discussed more below.</li>
+<li><span class="math inline">\(\frac{\text{H}!}{\text{H!}*\text{(N - H)!}}\)</span>: H! and (N-H)! are factorials of the integers H (the number of heads flipped) and N-H (the number of tails flipped). A factorial, x!, is the product of all integers from x to 1, descending. This particular combination of factorials is known as the binomial coefficient. It is a count of the number of different ways we could have flipped H heads in N flips.</li>
+<li><span class="math inline">\(\text{PH}^{\text{H}}\)</span>: This is the probability of flipping H heads given each flip has a probability PH of coming up heads. One of our assumptions is that flips are independent. This assumption is codified here, and in the final term, where we are assuming that the probability of a set of events occurring is the product of the probabilites of the individual events. For example, we are assuming that the probability of flipping 3 heads is PH * PH * PH, or PH ^ 3.</li>
+<li><span class="math inline">\((1 - \text{PH})^{\text{N} - \text{H}}\)</span>: This is the probability of flipping N-H tails given each flip has a probability 1-PH of coming up tails. Since there are only two outcomes (heads or tails), and the probabaility of heads is PH, we know that the probability of tails is 1-PH. Why? Because the probability of something happening each time we flip a coin is 1, so the probability of the two possible outcomes need to add to 1.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The full derivation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 
 </div>
 </div>
 </div>
-<section id="observation-1-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="observation-1-parameters">Observation 1: Parameters</h3>
-<p>These probability functions will always have “parameters”. These are required input <strong>in addition to</strong> your data necessary to generate an output. In our case, the data is “number of heads” (H). The two other numbers that make an appearance in our probability function are N (“number of flips”) and PH (“probability a given flip comes up heads”). You could consider N just more data, but PH has a very different flavor. It’s something we don’t know the value of, and in some sense the center of our interrogation. Our question of “is our coin fair?” can be reframed as “is the value of PH 0.5?” Because of this, we will want to investigate the impact that this parameter has on what we expect our data to look like.</p>
+<section id="observation-1-parameters" class="level4">
+<h4 class="anchored" data-anchor-id="observation-1-parameters">Observation 1: Parameters</h4>
+<p>These probability functions will always have “parameters”. These are input that, <strong>in addition to</strong> your data, are necessary to generate an output. In our case, the data is “number of heads” (H). The two other numbers that make an appearance in our probability function are N (“number of flips”) and PH (“probability a given flip comes up heads”). You could consider N just more data, but PH has a very different flavor. It’s something we don’t know the value of, and in some sense the center of our interrogation. Our question of “is our coin fair?” can be reframed as “is the value of PH 0.5?” Because of this, we will want to investigate the impact that this parameter has on what we expect our data to look like.</p>
 </section>
-<section id="observation-2-dependence-on-ph" class="level3">
-<h3 class="anchored" data-anchor-id="observation-2-dependence-on-ph">Observation 2: Dependence on PH</h3>
+<section id="observation-2-dependence-on-ph" class="level4">
+<h4 class="anchored" data-anchor-id="observation-2-dependence-on-ph">Observation 2: Dependence on PH</h4>
 <p>Give me a value of PH and N, and I can tell you the probability of seeing any number of heads, H. Here’s what these probabilities look like for a fair coin flipped 10 times:</p>
 <div class="cell">
 <details class="code-fold">
@@ -290,7 +318,7 @@ Attaching package: 'dplyr'</code></pre>
 <li>While seeing 5 heads is the most likely outcome, it isn’t mind-blowingly more likely than seeing 4 or 6 heads. In fact, the probability of being 1 off of perfectly even (i.e., seeing 4 OR 6 heads) is more likely than seeing exactly 5 head. 4 and 6 heads each have probability of ~0.205, making the probability of one of these events occurring ~0.410. Compare that to the probability of 5 heads, ~0.246.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -299,7 +327,7 @@ Adding probabilities
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 
 </div>
@@ -382,7 +410,7 @@ Adding probabilities
 <li>The distribution is no longer symmetric</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -391,7 +419,7 @@ The most likely result
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 
 </div>
@@ -399,11 +427,11 @@ The most likely result
 </div>
 </section>
 </section>
-<section id="how-can-we-determine-the-probability-of-fairness" class="level2">
-<h2 class="anchored" data-anchor-id="how-can-we-determine-the-probability-of-fairness">How can we determine the probability of fairness?</h2>
+<section id="how-can-we-determine-the-probability-of-fairness" class="level3">
+<h3 class="anchored" data-anchor-id="how-can-we-determine-the-probability-of-fairness">How can we determine the probability of fairness?</h3>
 <p>With a probability function in hand, we can now begin tackling our main challenge: determining the probability our coin is fair.</p>
-<section id="an-intuitive-but-wrong-choice-prdata-ph-0.5" class="level3">
-<h3 class="anchored" data-anchor-id="an-intuitive-but-wrong-choice-prdata-ph-0.5">An intuitive but wrong choice: Pr(data | PH = 0.5)</h3>
+<section id="an-intuitive-but-wrong-choice-prdata-ph-0.5" class="level4">
+<h4 class="anchored" data-anchor-id="an-intuitive-but-wrong-choice-prdata-ph-0.5">An intuitive but wrong choice: Pr(data | PH = 0.5)</h4>
 <p>We want to know how likely our hypothesis of a fair coin is given the data we collected. We have at our disposal a probability function for our data. The easiest thing you could think to do is plug in our data and hypothesized value of PH into this formula and take the probability we get out as the probability our hypothesis is true. For 7 heads in 10 flips we get:</p>
 <div class="cell">
 <details class="code-fold">
@@ -416,8 +444,8 @@ The most likely result
 </div>
 </div>
 <p>This seems like a reasonable ballpark. 7 heads seems a bit weird for a fair coin, and we saw a string of 4 straight heads in our dataset, which is surprising. At the same time, 10 flips isn’t much, and so a couple extra heads isn’t crazy. An 11.7% chance that our hypothesis is correct kinda <strong>feels</strong> right.</p>
-<p>Whenever we think we have an answer, its best to scrutinize it like a skeptic. What if we had our coin a lot more times? Say we flipped it 100 times instead of 10. If we had gotten exactly 50 heads in this case, how confident should we be that our coin is fair? More or less than in our 7 heads in 10 flips result?</p>
-<p>Let’s check and plug 50 heads in 100 flips to our probability function:</p>
+<p>Whenever we think we have an answer, its best to scrutinize it like a skeptic. What if we had flipped our coin a lot more times? Say we flipped it 100 times instead of 10. If we had gotten exactly 50 heads in this case, how confident should we be that our coin is fair? More or less than in our 7 heads in 10 flips result?</p>
+<p>Intuitively, 50 heads in 100 flips is a lot better evidence in favor of fairness than 7 heads in 10 flips. It’s more data and exactly 50% heads, vs.&nbsp;70% heads. So if we think our metric is accurately measuring the probability that our coin is fair, it should be higher in the 50/100 case. Let’s check and plug 50 heads in 100 flips to our probability function:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -428,7 +456,7 @@ The most likely result
 <pre><code>Pr(50 H | PH = 0.5, N = 100):  0.08 </code></pre>
 </div>
 </div>
-<p>Woah, that’s lower than the 7 h;eads in 10 flips case! How about if we got exactly 500 heads in 1000 flips</p>
+<p>Woah, that’s lower than the 7 heads in 10 flips case! How about if we got exactly 500 heads in 1000 flips</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -478,61 +506,14 @@ The most likely result
 </div>
 </div>
 </div>
-</section>
-<section id="considering-all-possible-hypotheses" class="level3">
-<h3 class="anchored" data-anchor-id="considering-all-possible-hypotheses">Considering all possible hypotheses</h3>
-</section>
-<section id="considering-prior-experiencesdata" class="level3">
-<h3 class="anchored" data-anchor-id="considering-prior-experiencesdata">Considering prior experiences/data</h3>
-</section>
-<section id="the-easy-way-out-nhst-and-p-values" class="level3">
-<h3 class="anchored" data-anchor-id="the-easy-way-out-nhst-and-p-values">The easy way out: NHST and p-values</h3>
-</section>
-<section id="p-values-vs-the-actual-solution" class="level3">
-<h3 class="anchored" data-anchor-id="p-values-vs-the-actual-solution">p-values vs the actual solution</h3>
-</section>
-</section>
-<section id="why-i-still-use-p-values" class="level2">
-<h2 class="anchored" data-anchor-id="why-i-still-use-p-values">Why I still use p-values</h2>
-<p>Unique aspects of my use case:</p>
-<ol type="1">
-<li>Statistical pragmatism</li>
-<li>EDA and list ordering</li>
-<li>Orthogonal validation</li>
-<li>Multiple testing</li>
-</ol>
-</section>
-</section>
-<section id="appendix" class="level1">
-<h1>Appendix</h1>
-<section id="controlling-a-coins-ph" class="level2">
-<h2 class="anchored" data-anchor-id="controlling-a-coins-ph">Controlling a coin’s PH</h2>
-<p>Fun fact: regardless of how screwy your coin is, it can always be made perfectly fair with a simple trick (and a few assumptions). What you do is you define a “flip” as the result of two independent flips. If your two flips have the same result (i.e., both heads or both tails), you throw it out and try again. If you get heads on one flip and tails on the other, then your “flip” is whatever the first flip came up as. That is, if you flipped heads then tails, call that “heads”. If you flipped tails then heads, call that “tails”.</p>
-<p>Why is this perfectly fair? Assume that each flip is independent, and has the same probability p of coming up heads. The probability of heads then tails is then p * (1 - p). The probability of tails then heads is then (1 - p) * p. Due to the commutativity of multiplication of real numbers (a * b = b * a), these two probabilites are the same. This means the probability of a “heads” is the exact same as that of a “tail”, regardless of how biased your coin is.</p>
-<p>Exercise for the reader: now that you can craft a fair coin from a biased one, can you use a fair coin to redefine flips such that the probability of “heads” is any real number between 0 and 1? This is one of my favorite probability theory puzzles.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Hint
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Step 1 is to express your desired probability of “heads” in binary (i.e., base 2 representation).</p>
-</div>
-</div>
-</div>
+<p>As we saw before, 50 heads and 50 tails is the most likely outcome for a fair coin. The problem though is that the more we flip the coin, the more possible outcomes there are. With 100 flips, everything from 40-60 heads is pretty commonly seen with a fair coin. Thus, the probability of any one of these events gets smaller and smaller with more flips. That’s why just calculating Pr(H | PH = 0.5) isn’t the full answer.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Solution
+An intuition for what went wrong
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -543,18 +524,131 @@ Solution
 </div>
 </div>
 </section>
-<section id="hypothesis-testing-in-practice" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis-testing-in-practice">Hypothesis testing in practice</h2>
+<section id="considering-all-possible-hypotheses" class="level4">
+<h4 class="anchored" data-anchor-id="considering-all-possible-hypotheses">Considering all possible hypotheses</h4>
+<p>Despite the flaws of Pr(H | PH = 0.5), it is on the right track. Look again at the comparison of 10 and 100 flips of a fair and 70% heads coin (figures X and Y). Focus your attention on the 50/50 bar (5 heads out of 10 or 50 heads out of 100). Compare the heights of this bar for the fair and unfair coin. What is the impact of more flips?</p>
+<p>While the absolute height of the bar for the fair coin does not tell us how likely our coin is to be fair, the relative bar heights for the fair and unfair coins seem to trend in the right direction. We are a little less than half as likely to see 5 heads in 10 flips with the 70% heads biased coin as we are with the fair coin. In 100 flips though, seeing 50 heads is WAY more likely with a fair coin than with the 70% heads coin.</p>
+<p><strong>Conclusion: P(H | PH = 0.5) does not matter on its own, what matters is its size relative to all other possible hypotheses</strong>.</p>
+<p>That’s to say, we need to calculate:</p>
+<p><span class="math display">\[
+\frac{\text{P(H | PH = 0.5)}}{\int_{0}^{1} \text{P(H | PH = x)}\,dx}
+\]</span> Integrals can be a bit of a pain in the butt to calculate. That’s part of what will motivate us to look for an easier way out. For now though, let’s see what various outcomes for 10 flips yields for this new quantity:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step size</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>dph <span class="ot">&lt;-</span> <span class="fl">0.001</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># phs to calculate value at for numerical integration</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>PH_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> dph<span class="sc">/</span><span class="dv">2</span>, <span class="at">to =</span> <span class="dv">1</span> <span class="sc">-</span> dph<span class="sc">/</span><span class="dv">2</span>, <span class="at">by =</span> dph)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>subgrid <span class="ot">&lt;-</span> PH_grid[PH_grid <span class="sc">&gt;</span> <span class="fl">0.45</span> <span class="sc">&amp;</span> PH_grid <span class="sc">&lt;</span> <span class="fl">0.55</span>]</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>Hs <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>PofFair <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">length</span>(Hs))</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(h <span class="cf">in</span> <span class="fu">seq_along</span>(Hs)){</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  num <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(Hs[h], <span class="at">size =</span> <span class="dv">10</span>, <span class="at">prob =</span> subgrid)<span class="sc">*</span>dph)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  denom <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(Hs[h], <span class="at">size =</span> <span class="dv">10</span>, <span class="at">prob =</span> PH_grid)<span class="sc">*</span>dph)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  PofFair[h] <span class="ot">&lt;-</span> num<span class="sc">/</span>denom</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">PofFair =</span> PofFair,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">H =</span> <span class="fu">factor</span>(Hs)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> H, <span class="at">y =</span> PofFair)) <span class="sc">+</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> </span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"H"</span>) <span class="sc">+</span> </span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Fairness probability (2nd try)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hypothesis_some_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="other-criticisms-of-nhst" class="level2">
-<h2 class="anchored" data-anchor-id="other-criticisms-of-nhst">Other criticisms of NHST</h2>
+<section id="sorry-your-coin-is-unfair" class="level4">
+<h4 class="anchored" data-anchor-id="sorry-your-coin-is-unfair">Sorry, your coin is unfair</h4>
+</section>
+<section id="considering-prior-experiencesdata" class="level4">
+<h4 class="anchored" data-anchor-id="considering-prior-experiencesdata">Considering prior experiences/data</h4>
+</section>
+<section id="the-easy-way-out-nhst-and-p-values" class="level4">
+<h4 class="anchored" data-anchor-id="the-easy-way-out-nhst-and-p-values">The easy way out: NHST and p-values</h4>
+</section>
+<section id="p-values-vs-the-actual-solution" class="level4">
+<h4 class="anchored" data-anchor-id="p-values-vs-the-actual-solution">p-values vs the actual solution</h4>
+</section>
+</section>
+<section id="why-i-still-use-p-values" class="level3">
+<h3 class="anchored" data-anchor-id="why-i-still-use-p-values">Why I still use p-values</h3>
+<p>Unique aspects of my use case:</p>
+<ol type="1">
+<li>Statistical pragmatism</li>
+<li>EDA and list ordering</li>
+<li>Orthogonal validation</li>
+<li>Multiple testing</li>
+</ol>
+</section>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
+<section id="controlling-a-coins-ph" class="level3">
+<h3 class="anchored" data-anchor-id="controlling-a-coins-ph">Controlling a coin’s PH</h3>
+<p>Fun fact: regardless of how screwy your coin is, it can always be made perfectly fair with a simple trick (and a few assumptions). What you do is you define a “flip” as the result of two independent flips. If your two flips have the same result (i.e., both heads or both tails), you throw it out and try again. If you get heads on one flip and tails on the other, then your “flip” is whatever the first flip came up as. That is, if you flipped heads then tails, call that “heads”. If you flipped tails then heads, call that “tails”.</p>
+<p>Why is this perfectly fair? Assume that each flip is independent, and has the same probability p of coming up heads. The probability of heads then tails is then p * (1 - p). The probability of tails then heads is then (1 - p) * p. Due to the commutativity of multiplication of real numbers (a * b = b * a), these two probabilites are the same. This means the probability of a “heads” is the exact same as that of a “tail”, regardless of how biased your coin is.</p>
+<p>Exercise for the reader: now that you can craft a fair coin from a biased one, can you use a fair coin to redefine flips such that the probability of “heads” is any real number between 0 and 1? This is one of my favorite probability theory puzzles.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hint
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Step 1 is to express your desired probability of “heads” in binary (i.e., base 2 representation).</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</div>
+</section>
+<section id="hypothesis-testing-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="hypothesis-testing-in-practice">Hypothesis testing in practice</h3>
+</section>
+<section id="other-criticisms-of-nhst" class="level3">
+<h3 class="anchored" data-anchor-id="other-criticisms-of-nhst">Other criticisms of NHST</h3>
 <ol type="1">
 <li>Do null’s exist?</li>
 <li>p-hacking and the social-psychology of science</li>
 </ol>
 </section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<section id="further-reading" class="level3">
+<h3 class="anchored" data-anchor-id="further-reading">Further reading</h3>
+</section>
 </section>
 </section>
 

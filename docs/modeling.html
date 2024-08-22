@@ -604,7 +604,7 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 </div>
-<p>Values closer to 50 get higher numbers than values further from 50, and the plot seems to be symmetric around 50. What’s significant about 50? It’s <span class="math display">\[size * prob\]</span>, or the average value we would expect to get from <code>rbinom()</code> with these parameters!</p>
+<p>Values closer to 50 get higher numbers than values further from 50, and the plot seems to be symmetric around 50. What’s significant about 50? It’s <span class="math inline">\(size * prob\)</span>, or the average value we would expect to get from <code>rbinom()</code> with these parameters!</p>
 <p>This investigation should give you some sense that the output of <code>dbinom()</code> is in some way related to the probability of seeing <code>x</code> given a certain <code>size</code> and <code>prob</code>. Is it exactly this probability? We can gut check by assessing some cases we know for certain. Like, what is the probability of seeing 1 success in 1 trial if <code>prob</code> = 0.5? 0.5, because that’s the defintiion of prob! What does <code>dbinom()</code> give us in this scenario:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -627,7 +627,7 @@ Attaching package: 'dplyr'</code></pre>
 <pre><code>[1] 0.2315</code></pre>
 </div>
 </div>
-<p>Everything still checks out. How about the probability of 2 successes in 2 trials given a certain <code>prob</code>? Each trial has probability of <code>prob</code> of being a success, and each trial is independent. Therefore, the probability of 2 successes in 2 trials is <span class="math display">\[prob * prob\]</span>. Does <code>dbinom()</code> give us the same output in that case?</p>
+<p>Everything still checks out. How about the probability of 2 successes in 2 trials given a certain <code>prob</code>? Each trial has probability of <code>prob</code> of being a success, and each trial is independent. Therefore, the probability of 2 successes in 2 trials is <span class="math inline">\(prob * prob\)</span>. Does <code>dbinom()</code> give us the same output in that case?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Expecting 0.25</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dbinom</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -651,41 +651,19 @@ Attaching package: 'dplyr'</code></pre>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">48</span>, <span class="dv">50</span>, <span class="dv">49</span>, <span class="dv">50</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>likelihood <span class="ot">&lt;-</span> <span class="fu">prod</span>(<span class="fu">dbinom</span>(data, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Why does this make sense? Consider the examples we went through above considering cases where <code>size</code> was 1 or 2. If we have two datasets with a single trial each, that’s like having one dataset with two trials. Thus, the likelihood for the full dataset of two single trial data points must be the same as that of a single dataset with one two trial data point. In other words:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>datapoint1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>datapoint2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>dataset <span class="ot">&lt;-</span> datapoint1 <span class="sc">+</span> datapoint2</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>dataset_L <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(dataset, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>calc_total_L <span class="ot">&lt;-</span> <span class="cf">function</span>(datapoints, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">prob =</span> <span class="fl">0.5</span>){</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Let's do what I suggested above: multiply the values</span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">prod</span>(<span class="fu">dbinom</span>(datapoints, <span class="at">size =</span> size, <span class="at">prob =</span> prob)))</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>total_L <span class="ot">&lt;-</span> <span class="fu">calc_total_L</span>(<span class="fu">c</span>(datapoint1, datapoint2), <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co"># We need this to be TRUE if our calculation is to be believed</span></span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>total_L <span class="sc">==</span> dataset_L</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] FALSE</code></pre>
-</div>
-</div>
-<p>Multiplying the likelihoods of the individual data points gives us the same thing as the likelihood for the dataset generated from combining the results of the two individual trials! This is anecdotal, but we can formalize why this is true, and when it will be true:</p>
+<p>Why does this make sense? Consider a simple example where we flip a single coin twice. Say we see heads (H) then tails (T). What was the probability of seeing this if the coin had been fair? Well, consider the following geometric intuition for probability. Flipping a coin is like throwing a dart at a number line that ranges from 0 to 1. If that dart is equally likely to land anywhere on the number line, then we could define heads as that dart landing at a value of less than the probability of heads. This is because, a fraction x of the line lies to the left of x. Flipping a coin twice and getting heads then tails means having the dart land to the left of 0.5 once, and to the right of 0.5 once. We can visualize this as a square formed by our two lines. We are thus asking what the probability is that if we were to throw a dart at this square, that we land in the upper right quadrant (left of 0.5 on first throw, right of 0.5 on second). Well, what fraction of the total area does each quadrant take up? It’s whatever the probability of heads is (x) times the probability of tails (1-x). Thus, probabilities of seeing multiple data points multiplies.</p>
+<p>There is one hidden assumption here, which is that of independence. We are assuming that the result of the first coin toss has no impact on the result of the second coin toss. This is an assumption ubiquitous throughout statistics, as it not only makes analyzing our data easier, in many cases meaningfully analyzing our data without this assumption would be impossible. At the same time though, its very important to be aware of this assumption, as there are lots of situations in which it can be seriously violated.</p>
 <p><strong>Conclusion</strong>: If each of a collection of N datapoints is “independent”, then the total likelihood of the dataset is equal to the product of the individual datapoint likelihoods. Datapoints being independent means that the value of any given datapoint does not influence the values of any other datapoint.</p>
 <p><strong>COMPUTATIONAL ASIDE</strong></p>
 <p>Above, we calculate the total likelihood. One problem that we will often run into with this calculation is that the product of all of the individual data point likelihoods will be really small for some potential parameter values. In this case, our computer might just assign these a value of 0, even though the true likelihood is non-zero. This is called an “overflow error”, and can mess with some of the things we do later in this course.</p>
 <p>For this reason, we will instead calculate the “log-total-likelihood”. This is just the logarithm of the total likelihood. Why does this matter? All of the <code>d&lt;distribution&gt;()</code> functions have one additional parameter named <code>log</code>, that can be set to either <code>TRUE</code> or <code>FALSE</code>. Setting it to <code>TRUE</code> will lead to it outputting the logarithm of what it would otherwise output.</p>
 <p>In addition, the log of a product is the same as the sum of logs:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>ll_one_way <span class="ot">&lt;-</span> <span class="fu">log</span>(<span class="fu">prod</span>(<span class="fu">dbinom</span>(numbers, <span class="dv">100</span>, <span class="fl">0.5</span>)))</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>ll_other_way <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(numbers, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>ll_one_way <span class="sc">==</span> ll_other_way</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>numbers <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>ll_one_way <span class="ot">&lt;-</span> <span class="fu">log</span>(<span class="fu">prod</span>(<span class="fu">dbinom</span>(numbers, <span class="dv">100</span>, <span class="fl">0.5</span>)))</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>ll_other_way <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(numbers, <span class="dv">100</span>, <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>ll_one_way <span class="sc">==</span> ll_other_way</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
@@ -697,19 +675,35 @@ Attaching package: 'dplyr'</code></pre>
 <p>The total log-likelihood of our data turns out to be a great metric by which determine model fit. The idea is to find the parameter value that gives you the largest likelihood. That’s to say, we choose as our best fit the parameter value(s) that make our data as probabilistically reasonable as possible. This is known as the maximum likelihood estimates for our parameter(s). If we simulated data using this value, our simulated data would on average come closer to looking like our real data than it would for any other parameter values we could have simulated with.</p>
 <p>How does this play out with our data? We can visualize the so-called log-likelihood function to see which value of <code>prob</code> maximizes it:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>prob_guesses <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>log_likelihoods <span class="ot">&lt;-</span> <span class="fu">sapply</span>(prob_guesses, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">dbinom</span>(simdata, </span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">size =</span> <span class="dv">100</span>, </span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">prob =</span> x, </span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">log =</span> <span class="cn">TRUE</span>)))</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>Ldf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ll =</span> log_likelihoods,</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">prob =</span> prob_guesses)</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>Ldf <span class="sc">%&gt;%</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> prob, <span class="at">y =</span> ll)) <span class="sc">+</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>prob_guesses <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>log_likelihoods <span class="ot">&lt;-</span> <span class="fu">sapply</span>(prob_guesses, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">dbinom</span>(simdata, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">size =</span> <span class="dv">100</span>, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">prob =</span> x, </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">log =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>Ldf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ll =</span> log_likelihoods,</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">prob =</span> prob_guesses)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>Ldf <span class="sc">%&gt;%</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> prob, <span class="at">y =</span> ll)) <span class="sc">+</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modeling_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Keep in mind the y-axis is a log scale, so differences of 1 equate to an order of magnitude difference on the “regular” scale. Let’s zoom in around our putative values to get a better look at which value of <code>prob</code> is most likely:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>zoomed_plot <span class="ot">&lt;-</span> Ldf <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(prob <span class="sc">&gt;=</span> <span class="fl">0.45</span> <span class="sc">&amp;</span> prob <span class="sc">&lt;=</span> <span class="fl">0.55</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> prob, <span class="at">y =</span> <span class="fu">exp</span>(ll))) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>zoomed_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -718,37 +712,21 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 </div>
 </div>
-<p>Keep in mind the y-axis is a log scale, so differences of 1 equate to an order of magnitude difference on the “regular” scale. Let’s zoom in around our putative values to get a better look at which value of <code>prob</code> is most likely:</p>
+<p>It looks like a value of <code>prob = 0.5</code> is not strictly speaking the best guess. Let’s see what value in our grid of <code>prob_guesses</code> gives the highest value, and annotate this value on our zoomed in plot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>zoomed_plot <span class="ot">&lt;-</span> Ldf <span class="sc">%&gt;%</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(prob <span class="sc">&gt;=</span> <span class="fl">0.45</span> <span class="sc">&amp;</span> prob <span class="sc">&lt;=</span> <span class="fl">0.55</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> prob, <span class="at">y =</span> <span class="fu">exp</span>(ll))) <span class="sc">+</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>zoomed_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>max_ll <span class="ot">&lt;-</span> Ldf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ll <span class="sc">==</span> <span class="fu">max</span>(ll)) <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(prob) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">unname</span>()</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>max_ll</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.497</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>zoomed_plot <span class="sc">+</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> max_ll,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">'darkred'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="modeling_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>It looks like a value of <code>prob = 0.5</code> is not strictly speaking the best guess. Let’s see what value in our grid of <code>prob_guesses</code> gives the highest value, and annotate this value on our zoomed in plot:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>max_ll <span class="ot">&lt;-</span> Ldf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ll <span class="sc">==</span> <span class="fu">max</span>(ll)) <span class="sc">%&gt;%</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(prob) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>() <span class="sc">%&gt;%</span> <span class="fu">unname</span>()</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>max_ll</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.497</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>zoomed_plot <span class="sc">+</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> max_ll,</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">'darkred'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="modeling_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -760,42 +738,43 @@ Attaching package: 'dplyr'</code></pre>
 <p>While the strategy for finding the maximum likelihood parameter estimate used above is ok for this toy example, we can do a lot better in terms of the speed and generalizability of our computational solution. If we can provide the function that we want to maximize (e.g., the log-likelihood), and the data needed to calculate the value of our function for a given parameter estimate, then R provides us with the tool necessary to find the parameter estimate that maximizes our function. That tool is the <code>optim()</code> function.</p>
 <p>Here is how you can use <code>optim()</code> to find the maximum likelihood estimate of <code>prob</code> in our example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 1: Define the function to maximize</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>binom_ll <span class="ot">&lt;-</span> <span class="cf">function</span>(params, data, <span class="at">size =</span> <span class="dv">100</span>){</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We estimate on a log scale for convenience so we convert here</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  prob <span class="ot">&lt;-</span> params[<span class="dv">1</span>]</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Log-likelihood assuming binomial distribution</span></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  ll <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(data, </span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> size, </span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob =</span> prob, </span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return negative because optim() by default will find the minimum</span></span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="sc">-</span><span class="fu">sum</span>(ll))</span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 2: run optim()</span></span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">par =</span> <span class="fl">0.5</span>, <span class="co"># initial guess for prob</span></span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">fn =</span> binom_ll, <span class="co"># function to maximize</span></span>
-<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> simdata, <span class="co"># something passed to the function</span></span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>, <span class="co"># Most efficient method for finding max,</span></span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fl">0.001</span>, <span class="co"># Lower bound for parameter estimate</span></span>
-<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fl">0.999</span> <span class="co"># Upper bound for parameter estimate</span></span>
-<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 3: Inspect the estimate</span></span>
-<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>prob_est <span class="ot">&lt;-</span> fit<span class="sc">$</span>par[<span class="dv">1</span>]</span>
-<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>prob_est</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 1: Define the function to maximize</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>binom_ll <span class="ot">&lt;-</span> <span class="cf">function</span>(params, data, <span class="at">size =</span> <span class="dv">100</span>){</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We estimate on a log scale for convenience so we convert here</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  prob <span class="ot">&lt;-</span> params[<span class="dv">1</span>]</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Log-likelihood assuming binomial distribution</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  ll <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(data, </span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> size, </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">prob =</span> prob, </span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return negative because optim() by default will find the minimum</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="sc">-</span><span class="fu">sum</span>(ll))</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 2: run optim()</span></span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">par =</span> <span class="fl">0.5</span>, <span class="co"># initial guess for prob</span></span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">fn =</span> binom_ll, <span class="co"># function to maximize</span></span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> simdata, <span class="co"># something passed to the function</span></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>, <span class="co"># Most efficient method for finding max,</span></span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">lower =</span> <span class="fl">0.001</span>, <span class="co"># Lower bound for parameter estimate</span></span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">upper =</span> <span class="fl">0.999</span> <span class="co"># Upper bound for parameter estimate</span></span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 3: Inspect the estimate</span></span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>prob_est <span class="ot">&lt;-</span> fit<span class="sc">$</span>par[<span class="dv">1</span>]</span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>prob_est</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.4969</code></pre>
 </div>
 </div>
+<p>This is very close to what we found through other means, but it has the distinction of being the most accurate, automated method we have devised. In fact, this method, known as numerical estimation of the maximum likelihood parameter(s), is a mainstay in modern statistics.</p>
 <p><strong>END OF LECTURE 1</strong></p>
 </section>
 </section>
@@ -808,56 +787,56 @@ Attaching package: 'dplyr'</code></pre>
 <p>The boostrap is one of the cutest, somehow legitimate ideas in statistics that is a shockingly accurate way by which to assess uncertainty in your parameter estimates. The idea is to take your original dataset and <strong>sample from it with replacement</strong>. This means creating a new dataset, the same size of the original dataset, which is generated by randomly choosing datpoints from the original dataset until you have chosen N datapoints (N being the number of datapoints in your original dataset). Sampling “with replacement” means that every time you sample a datapoint, you “put it back”, so to speak. So each sample is taken from the full original dataset. This ensures that the new dataset you generate has almost no chance of looking exactly like your original dataset. You can then re-estimate the maximum likelihood parameter with each new re-sampled dataset, and see how much variability there is from re-sampling to re-sampling. From this, you can derive measures of uncertainty, like the standard devitaion of your resampled data estimates.</p>
 <p>Let’s put this into action with our simulated data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>nresamps <span class="ot">&lt;-</span> <span class="dv">500</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> nresamps)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nresamps){</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Step 1: resample</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  resampled_data <span class="ot">&lt;-</span> <span class="fu">sample</span>(simdata, </span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">size =</span> <span class="fu">length</span>(simdata),</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Step 2: estimate</span></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">par =</span> <span class="fl">0.5</span>, <span class="co"># initial guess for prob</span></span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> binom_ll, <span class="co"># function to maximize</span></span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> resampled_data, <span class="co"># something passed to the function</span></span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>, <span class="co"># Most efficient method for finding max,</span></span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> <span class="fl">0.001</span>, <span class="co"># Lower bound for parameter estimate</span></span>
-<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> <span class="fl">0.999</span> <span class="co"># Upper bound for parameter estimate</span></span>
-<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Step 3: save estimate</span></span>
-<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>  estimates[i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>par[<span class="dv">1</span>]</span>
-<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a><span class="do">### Uncertainty</span></span>
-<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(estimates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>nresamps <span class="ot">&lt;-</span> <span class="dv">500</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>estimates <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> nresamps)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nresamps){</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Step 1: resample</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  resampled_data <span class="ot">&lt;-</span> <span class="fu">sample</span>(simdata, </span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">size =</span> <span class="fu">length</span>(simdata),</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Step 2: estimate</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>  fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">par =</span> <span class="fl">0.5</span>, <span class="co"># initial guess for prob</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> binom_ll, <span class="co"># function to maximize</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> resampled_data, <span class="co"># something passed to the function</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"L-BFGS-B"</span>, <span class="co"># Most efficient method for finding max,</span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">lower =</span> <span class="fl">0.001</span>, <span class="co"># Lower bound for parameter estimate</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">upper =</span> <span class="fl">0.999</span> <span class="co"># Upper bound for parameter estimate</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>  <span class="do">### Step 3: save estimate</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>  estimates[i] <span class="ot">&lt;-</span> fit<span class="sc">$</span>par[<span class="dv">1</span>]</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="do">### Uncertainty</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(estimates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.004929947</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Check out distribution of estimates</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">estimate =</span> estimates) <span class="sc">%&gt;%</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate)) <span class="sc">+</span> </span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">'black'</span>,</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">'darkgray'</span>,</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins =</span> <span class="dv">25</span>) <span class="sc">+</span> </span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Estimate"</span>) <span class="sc">+</span> </span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count"</span>) <span class="sc">+</span> </span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.55</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Check out distribution of estimates</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">estimate =</span> estimates) <span class="sc">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> estimate)) <span class="sc">+</span> </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">'black'</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill =</span> <span class="st">'darkgray'</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">bins =</span> <span class="dv">25</span>) <span class="sc">+</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Estimate"</span>) <span class="sc">+</span> </span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Count"</span>) <span class="sc">+</span> </span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.55</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 2 rows containing missing values (`geom_bar()`).</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="modeling_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="modeling_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -867,8 +846,63 @@ Attaching package: 'dplyr'</code></pre>
 <p>Rerun this bootstrapping multiple times (e.g., 5) for 3 different values of <code>nresamp</code>. How does the size of <code>nresamp</code> relate to the output.</p>
 </section>
 </section>
-<section id="the-hessian" class="level4" data-number="4.1.2.2">
-<h4 data-number="4.1.2.2" class="anchored" data-anchor-id="the-hessian"><span class="header-section-number">4.1.2.2</span> The Hessian</h4>
+<section id="the-shape-of-your-likelihood" class="level4" data-number="4.1.2.2">
+<h4 data-number="4.1.2.2" class="anchored" data-anchor-id="the-shape-of-your-likelihood"><span class="header-section-number">4.1.2.2</span> The shape of your likelihood</h4>
+<p>Bootstrapping is easy, intuitive, and great. It is not without its downsides though. For one, it is often computationally intensive. We are forcing ourselves to rerun our analysis N times, where N is our chosen number of bootstrap samples. If our dataset is large and/or our model complex (i.e., there are lots of parameters to estimate), this can take our computer quite a long time. In addition, as this method relies on simulation, it is prone to variation. That is to say, from bootstrap to bootstrap, your estimate for your uncertainty will vary. You can decrease the amount of variance by increasing N, but that comes with greater comptuational cost. It would be awesome if we could somehow extract information about our uncertainty directly from our data and model.</p>
+<p>Such a method exists! The premise is that we can derive a measure of uncertainty from the shape of our likelihood function. Let’s see what that means by exploring two cases, one in which we have lots of data and one in which we have very little data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate small and large datasets</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>small_data <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">10</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>big_data <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate log-likelihoods</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>prob_guesses <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>small_log_likelihoods <span class="ot">&lt;-</span> <span class="fu">sapply</span>(prob_guesses, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">dbinom</span>(small_data, </span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">size =</span> <span class="dv">100</span>, </span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">prob =</span> x, </span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">log =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>big_log_likelihoods <span class="ot">&lt;-</span> <span class="fu">sapply</span>(prob_guesses, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">dbinom</span>(big_data, </span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">size =</span> <span class="dv">100</span>, </span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">prob =</span> x, </span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>                                                           <span class="at">log =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot them</span></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>Ldf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">ll =</span> <span class="fu">c</span>(small_log_likelihoods,</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>                     big_log_likelihoods),</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"small"</span>, <span class="st">"big"</span>),</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>                                <span class="at">each =</span> <span class="fu">length</span>(prob_guesses))),</span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">prob =</span> <span class="fu">rep</span>(prob_guesses, <span class="at">times =</span> <span class="dv">2</span>))</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a>Ldf <span class="sc">%&gt;%</span></span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(size <span class="sc">==</span> <span class="st">"small"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> prob, <span class="at">y =</span> <span class="fu">exp</span>(ll))) <span class="sc">+</span></span>
+<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modeling_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Ldf <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(size <span class="sc">==</span> <span class="st">"big"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> prob, <span class="at">y =</span> <span class="fu">exp</span>(ll))) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="modeling_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>What do you notice about the two likelihood function curves? The small dataset curve is broader than the large dataset curve. Why is this the case? Because with less data, it’s more difficult to distinguish between different parameter values. Seeing 5 heads in 10 flips isn’t all that crazy for a coin with a probability of heads of 0.6 or 0.4. Seeing 50 heads in 100 flips though with that kind of coin is a lot less likely. Collecting more data narrows the space of reasonable parameters.</p>
+<p>Thus, intuitively, the sharpness of the likelihood function about its maximum could be a reasonable estimate for our uncertainty. Formalizing this idea takes a good deal of math, but the idea is that calculus provides us with a quantity that describes how sharp a function peaks about its maximum: the second derivative. The second derivative of our likelihood function can be provided by <code>optim()</code> in the form of what is known as the Hessian:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 1: run optim()</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">optim</span>(</span>
@@ -891,9 +925,10 @@ Attaching package: 'dplyr'</code></pre>
 [1,] 0.004999884</code></pre>
 </div>
 </div>
+<p>Compare this value with the one we got through bootstrapping. They’re pretty similar!</p>
 </section>
-<section id="the-full-likelihood" class="level4" data-number="4.1.2.3">
-<h4 data-number="4.1.2.3" class="anchored" data-anchor-id="the-full-likelihood"><span class="header-section-number">4.1.2.3</span> The full likelihood</h4>
+<section id="uncertainty-in-higher-dimensions" class="level4" data-number="4.1.2.3">
+<h4 data-number="4.1.2.3" class="anchored" data-anchor-id="uncertainty-in-higher-dimensions"><span class="header-section-number">4.1.2.3</span> Uncertainty in “higher dimensions”</h4>
 <p><strong>END OF LECTURE 2</strong></p>
 </section>
 </section>
@@ -903,7 +938,7 @@ Attaching package: 'dplyr'</code></pre>
 </section>
 <section id="a-2nd-self-guided-exercise-fit-a-normal-distribution" class="level3" data-number="4.1.4">
 <h3 data-number="4.1.4" class="anchored" data-anchor-id="a-2nd-self-guided-exercise-fit-a-normal-distribution"><span class="header-section-number">4.1.4</span> A 2nd self-guided exercise: fit a normal distribution</h3>
-<p><strong>END OF LECTURE</strong></p>
+<p><strong>END OF LECTURE 3</strong></p>
 </section>
 </section>
 <section id="problem-set" class="level2" data-number="4.2">

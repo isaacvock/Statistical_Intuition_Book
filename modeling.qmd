@@ -230,7 +230,7 @@ tibble(x = xs,
 ```
 
 Values closer to 50 get higher numbers than values further from 50, and the plot
-seems to be symmetric around 50. What's significant about 50? It's $$size * prob$$,
+seems to be symmetric around 50. What's significant about 50? It's $size * prob$,
 or the average value we would expect to get from `rbinom()` with these parameters!
 
 This investigation should give you some sense that the output of `dbinom()` is 
@@ -256,7 +256,7 @@ dbinom(1, 1, 0.2315)
 Everything still checks out. How about the probability of 2 successes in 2 trials
 given a certain `prob`? Each trial has probability of `prob` of being a success,
 and each trial is independent. Therefore, the probability of 2 successes in 2 trials
-is $$prob * prob$$. Does `dbinom()` give us the same output in that case?
+is $prob * prob$. Does `dbinom()` give us the same output in that case?
 
 ```{r}
 # Expecting 0.25
@@ -289,36 +289,14 @@ data <- c(48, 50, 49, 50)
 likelihood <- prod(dbinom(data, size = 100, prob = 0.5))
 ```
 
-Why does this make sense? Consider the examples we went through above considering
-cases where `size` was 1 or 2. If we have two datasets with a single trial each,
-that's like having one dataset with two trials. Thus, the likelihood for the full
-dataset of two single trial data points must be the same as that of a single dataset
-with one two trial data point. In other words:
+Why does this make sense? Consider a simple example where we flip a single coin
+twice. Say we see heads (H) then tails (T). What was the probability of seeing this
+if the coin had been fair? Well, consider the following geometric intuition for 
+probability. Flipping a coin is like throwing a dart at a number line that ranges from 0 to 1. If that dart is equally likely to land anywhere on the number line, then we could define heads as that dart landing at a value of less than the probability of heads. This is because, a fraction x of the line lies to the left of x. Flipping a coin twice and getting heads then tails means having the dart land to the left of 0.5 once, and to the right of 0.5 once. We can visualize this as a square formed by our two lines. We are thus asking what the probability is that if we were to throw a dart at this square, that we land in the upper right quadrant (left of 0.5 on first throw, right of 0.5 on second). Well, what fraction of the total area does each quadrant take up? It's whatever the probability of heads is (x) times the probability of tails (1-x). Thus, probabilities of seeing multiple data points multiplies.
 
-```{r}
-datapoint1 <- c(1)
-datapoint2 <- c(0)
-dataset <- datapoint1 + datapoint2
-
-dataset_L <- dbinom(dataset, size = 2, prob = 0.5)
-
-calc_total_L <- function(datapoints, size = 2, prob = 0.5){
-  
-  ### Let's do what I suggested above: multiply the values
-  return(prod(dbinom(datapoints, size = size, prob = prob)))
-  
-}
-
-total_L <- calc_total_L(c(datapoint1, datapoint2), size = 1, prob = 0.5)
-
-# We need this to be TRUE if our calculation is to be believed
-total_L == dataset_L
-```
-
-Multiplying the likelihoods of the individual data points gives us the same
-thing as the likelihood for the dataset generated from combining the results of 
-the two individual trials! This is anecdotal, but we can formalize why this is 
-true, and when it will be true:
+There is one hidden assumption here, which is that of independence. We are assuming that the result of the first coin toss has no impact on the result of the second coin toss. This is an assumption ubiquitous throughout statistics, as it not only makes analyzing our data easier, in many cases meaningfully analyzing our data without this assumption would be impossible. At the same time though, its very 
+important to be aware of this assumption, as there are lots of situations in which
+it can be seriously violated. 
 
 **Conclusion**: If each of a collection of N datapoints is "independent", then
 the total likelihood of the dataset is equal to the product of the individual
@@ -463,6 +441,8 @@ prob_est
 
 ```
 
+This is very close to what we found through other means, but it has the distinction of being the most accurate, automated method we have devised. In fact, this method,
+known as numerical estimation of the maximum likelihood parameter(s), is a mainstay in modern statistics.
 
 **END OF LECTURE 1**
 
@@ -528,7 +508,68 @@ tibble(estimate = estimates) %>%
 
 Rerun this bootstrapping multiple times (e.g., 5) for 3 different values of `nresamp`. How does the size of `nresamp` relate to the output.
 
-#### The Hessian
+#### The shape of your likelihood
+
+Bootstrapping is easy, intuitive, and great. It is not without its downsides though. For one, it is often computationally intensive. We are forcing ourselves to rerun our analysis N times, where N is our chosen number of bootstrap samples. If our dataset is large and/or our model complex (i.e., there are lots of parameters to estimate), this can take our computer quite a long time. In addition, as this method relies on simulation, it is prone to variation. That is to say, from bootstrap to bootstrap, your estimate for your uncertainty will vary. You can decrease the amount of variance by increasing N, but that comes with greater comptuational cost. It would be awesome if we could somehow extract information about our uncertainty directly from our data and model. 
+
+Such a method exists! The premise is that we can derive a measure of uncertainty from the shape of our likelihood function. Let's see what that means by exploring two cases, one in which we have lots of data and one in which we have very little
+data.
+
+```{r, results='hold'}
+
+# Simulate small and large datasets
+small_data <- rbinom(10, size = 100, prob = 0.5)
+big_data <- rbinom(100, size = 100, prob = 0.5)
+
+
+# Calculate log-likelihoods
+prob_guesses <- seq(from = 0, to = 1, by = 0.001)
+small_log_likelihoods <- sapply(prob_guesses, function(x) sum(dbinom(small_data, 
+                                                           size = 100, 
+                                                           prob = x, 
+                                                           log = TRUE)))
+big_log_likelihoods <- sapply(prob_guesses, function(x) sum(dbinom(big_data, 
+                                                           size = 100, 
+                                                           prob = x, 
+                                                           log = TRUE)))
+
+# Plot them
+Ldf <- tibble(ll = c(small_log_likelihoods,
+                     big_log_likelihoods),
+              size = factor(rep(c("small", "big"),
+                                each = length(prob_guesses))),
+              prob = rep(prob_guesses, times = 2))
+
+Ldf %>%
+  dplyr::filter(size == "small") %>%
+  ggplot(aes(x = prob, y = exp(ll))) +
+  geom_line() + 
+  theme_classic() +
+  coord_cartesian(xlim = c(0.4, 0.6))
+
+Ldf %>%
+  dplyr::filter(size == "big") %>%
+  ggplot(aes(x = prob, y = exp(ll))) +
+  geom_line() + 
+  theme_classic() +
+  coord_cartesian(xlim = c(0.4, 0.6))
+
+```
+
+
+What do you notice about the two likelihood function curves? The small dataset
+curve is broader than the large dataset curve. Why is this the case? Because with less data, it's more difficult to distinguish between different parameter values.
+Seeing 5 heads in 10 flips isn't all that crazy for a coin with a probability of 
+heads of 0.6 or 0.4. Seeing 50 heads in 100 flips though with that kind of coin
+is a lot less likely. Collecting more data narrows the space of reasonable parameters. 
+
+Thus, intuitively, the sharpness of the likelihood function about its maximum 
+could be a reasonable estimate for our uncertainty. Formalizing this idea takes
+a good deal of math, but the idea is that calculus provides us with a quantity
+that describes how sharp a function peaks about its maximum: the second derivative.
+The second derivative of our likelihood function can be provided by `optim()` in
+the form of what is known as the Hessian:
+
 
 ```{r}
 
@@ -553,7 +594,11 @@ uncertainty
 ```
 
 
-#### The full likelihood
+Compare this value with the one we got through bootstrapping. They're pretty similar!
+
+
+#### Uncertainty in "higher dimensions"
+
 
 
 **END OF LECTURE 2**
@@ -568,7 +613,7 @@ given value for these two parameters, and follow the steps above to find a strat
 ### A 2nd self-guided exercise: fit a normal distribution
 
 
-**END OF LECTURE**
+**END OF LECTURE 3**
 
 ## Problem set
 
