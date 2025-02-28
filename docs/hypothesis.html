@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -69,6 +103,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -221,26 +284,28 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#discovering-nhst" id="toc-discovering-nhst" class="nav-link active" data-scroll-target="#discovering-nhst"><span class="header-section-number">6</span> Discovering NHST</a>
+  <li><a href="#does-your-data-support-your-hypothesis" id="toc-does-your-data-support-your-hypothesis" class="nav-link active" data-scroll-target="#does-your-data-support-your-hypothesis"><span class="header-section-number">5.1</span> Does your data support your hypothesis?</a></li>
+  <li><a href="#the-toy-example-is-this-coin-fair" id="toc-the-toy-example-is-this-coin-fair" class="nav-link" data-scroll-target="#the-toy-example-is-this-coin-fair"><span class="header-section-number">5.2</span> The toy example: is this coin fair?</a></li>
+  <li><a href="#assessing-a-coins-fairness" id="toc-assessing-a-coins-fairness" class="nav-link" data-scroll-target="#assessing-a-coins-fairness"><span class="header-section-number">5.3</span> Assessing a coin’s fairness</a>
   <ul class="collapse">
-  <li><a href="#classic-example-the-fair-coin" id="toc-classic-example-the-fair-coin" class="nav-link" data-scroll-target="#classic-example-the-fair-coin"><span class="header-section-number">6.1</span> Classic example: the fair coin</a>
-  <ul class="collapse">
-  <li><a href="#step-1-collect-some-data" id="toc-step-1-collect-some-data" class="nav-link" data-scroll-target="#step-1-collect-some-data"><span class="header-section-number">6.1.1</span> Step 1: Collect some data</a></li>
+  <li><a href="#can-you-definitively-answer-the-question" id="toc-can-you-definitively-answer-the-question" class="nav-link" data-scroll-target="#can-you-definitively-answer-the-question"><span class="header-section-number">5.3.1</span> Can you definitively answer the question?</a></li>
+  <li><a href="#how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment" id="toc-how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment" class="nav-link" data-scroll-target="#how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment"><span class="header-section-number">5.3.2</span> How can we describe the probability of a given outcome of our experiment?</a></li>
+  <li><a href="#how-can-we-determine-the-probability-of-fairness" id="toc-how-can-we-determine-the-probability-of-fairness" class="nav-link" data-scroll-target="#how-can-we-determine-the-probability-of-fairness"><span class="header-section-number">5.3.3</span> How can we determine the probability of fairness?</a></li>
+  <li><a href="#why-i-still-use-p-values" id="toc-why-i-still-use-p-values" class="nav-link" data-scroll-target="#why-i-still-use-p-values"><span class="header-section-number">5.3.4</span> Why I still use p-values</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#performing-common-tests" id="toc-performing-common-tests" class="nav-link" data-scroll-target="#performing-common-tests"><span class="header-section-number">7</span> Performing common tests</a>
+  <li><a href="#performing-common-tests" id="toc-performing-common-tests" class="nav-link" data-scroll-target="#performing-common-tests"><span class="header-section-number">6</span> Performing common tests</a>
   <ul class="collapse">
-  <li><a href="#z-test" id="toc-z-test" class="nav-link" data-scroll-target="#z-test"><span class="header-section-number">7.1</span> Z-test</a></li>
-  <li><a href="#t-test" id="toc-t-test" class="nav-link" data-scroll-target="#t-test"><span class="header-section-number">7.2</span> T-test</a></li>
-  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova"><span class="header-section-number">7.3</span> ANOVA</a></li>
-  <li><a href="#non-parametric-tests" id="toc-non-parametric-tests" class="nav-link" data-scroll-target="#non-parametric-tests"><span class="header-section-number">7.4</span> Non-parametric tests</a></li>
-  <li><a href="#custom-nshting" id="toc-custom-nshting" class="nav-link" data-scroll-target="#custom-nshting"><span class="header-section-number">7.5</span> Custom NSHTing</a></li>
+  <li><a href="#z-test" id="toc-z-test" class="nav-link" data-scroll-target="#z-test"><span class="header-section-number">6.1</span> Z-test</a></li>
+  <li><a href="#t-test" id="toc-t-test" class="nav-link" data-scroll-target="#t-test"><span class="header-section-number">6.2</span> T-test</a></li>
+  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova"><span class="header-section-number">6.3</span> ANOVA</a></li>
+  <li><a href="#non-parametric-tests" id="toc-non-parametric-tests" class="nav-link" data-scroll-target="#non-parametric-tests"><span class="header-section-number">6.4</span> Non-parametric tests</a></li>
+  <li><a href="#custom-nshting" id="toc-custom-nshting" class="nav-link" data-scroll-target="#custom-nshting"><span class="header-section-number">6.5</span> Custom NSHTing</a></li>
   </ul></li>
-  <li><a href="#challenges" id="toc-challenges" class="nav-link" data-scroll-target="#challenges"><span class="header-section-number">8</span> Challenges</a>
+  <li><a href="#challenges" id="toc-challenges" class="nav-link" data-scroll-target="#challenges"><span class="header-section-number">7</span> Challenges</a>
   <ul class="collapse">
-  <li><a href="#multiple-test-adjustment" id="toc-multiple-test-adjustment" class="nav-link" data-scroll-target="#multiple-test-adjustment"><span class="header-section-number">8.1</span> Multiple-test adjustment</a></li>
-  <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power"><span class="header-section-number">8.2</span> Power</a></li>
-  <li><a href="#miscalibration" id="toc-miscalibration" class="nav-link" data-scroll-target="#miscalibration"><span class="header-section-number">8.3</span> Miscalibration</a></li>
+  <li><a href="#multiple-test-adjustment" id="toc-multiple-test-adjustment" class="nav-link" data-scroll-target="#multiple-test-adjustment"><span class="header-section-number">7.1</span> Multiple-test adjustment</a></li>
+  <li><a href="#power" id="toc-power" class="nav-link" data-scroll-target="#power"><span class="header-section-number">7.2</span> Power</a></li>
+  <li><a href="#miscalibration" id="toc-miscalibration" class="nav-link" data-scroll-target="#miscalibration"><span class="header-section-number">7.3</span> Miscalibration</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -268,48 +333,474 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>The last two chapters discussed how to model randomness in data. In this process, we can obtain parameter estimates that describe some aspect of the biological systems we study. Often, we have hypotheses about what parameter values we expected, or what certain parameter values tell us about our system of interest. How do we go from the output of a statistical model to “conclusions” regarding these hypotheses? One popular (albeit flawed) method for doing so is Null Hypothesis Statistical Testing (NHST) and is the topic of this chapter.</p>
-<section id="discovering-nhst" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Discovering NHST</h1>
 <p>We are going to go through a collection of exercises that will help you discover the concept of NHST on your own. On this journey, you will also become acutely aware of the limitations of this method, and thus be better prepared to carefully interpret the output of an NHST analysis.</p>
-<section id="classic-example-the-fair-coin" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="classic-example-the-fair-coin"><span class="header-section-number">6.1</span> Classic example: the fair coin</h2>
-<p>Imagine you have a coin, and you would like to test the hypothesis, “is this coin fair?”. A “fair” coin is one that when flipped, is equally likely to come up heads or tails.</p>
-<p>We can cast this question in the language of statistical modeling. If we assume that each coin flip is independent (e.g., the last outcome does not influence the next) and that the probability of heads is unchanged from flip to flip, then we can model the number of heads as following a binomial distribution. We know how many times we flip the coin, so there is one unknown parameter, <code>prob</code>, which represents the probability of seeing a head. A fair coin is one in which <code>prob</code> = 0.5. In this framing, our task is to determine whether or not the “true <code>prob</code>” for our coin is exactly 0.5.</p>
-<p>How should we go about answering this question?</p>
-<section id="step-1-collect-some-data" class="level3" data-number="6.1.1">
-<h3 data-number="6.1.1" class="anchored" data-anchor-id="step-1-collect-some-data"><span class="header-section-number">6.1.1</span> Step 1: Collect some data</h3>
-<p>The only way we can begin to tell if the coin is fair or not is to flip it!</p>
+<section id="does-your-data-support-your-hypothesis" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="does-your-data-support-your-hypothesis"><span class="header-section-number">5.1</span> Does your data support your hypothesis?</h2>
+<p>All scientific endeavors can be boiled down to two steps:</p>
+<ol type="1">
+<li>Coming up with a hypothesis about how some aspect of the world works.</li>
+<li>Collecting data to test said hypothesis.</li>
+</ol>
+<p>Maybe you hypothesize that molecule X is a biomarker for a disease (i.e., its presence in an individual suggests that individual has the disease). You could measure the levels of molecule X in healthy and diseased patients to test your hypothesis. Maybe you hypothesize that transcript Y gets downregulated when you treat cells with drug Z. In any case, data that will provide evidence for or against said hypothesis needs to be collected.</p>
+<p>There is a third step which at first may feel like a trivial extension of the second: analyzing your data and drawing a conclusion about your hypothesis. In practice though, this represents an immense challenge. You may have encountered an algorithm by which to solve this problem, known as null-hypothesis statistical testing. You may have been taught how to calculate p-values and how to draw conclusions from these p-values. Despite the ubiquitous algorithmization of this process, it has come under increased, heated scrutiny. Some have even accused it of launching a widespread reproducibility crisis plaguing the entire scientific enterprise, and have called for the death of this long extant practice.</p>
+<p>What are these p-values and are they really that evil? To answer this question, we are going to explore the question that titles this section: “Does your data support your hypothesis?”. We are going to journey to the depths of this question to understand the challenges it poses and the ways we can go about tackling it. During this exploration, we will discover null-hypothesis significance testing (NHST). What we will find though, is that NHST is not the definitive solution to our quandery. It is a cheap hack that offers us an easy way out at the cost of falling short of our original goal. Despite the imperfections of its solution, it is not without merit though, and we will attempt to understand why it’s ok to give up sometimes.</p>
+</section>
+<section id="the-toy-example-is-this-coin-fair" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="the-toy-example-is-this-coin-fair"><span class="header-section-number">5.2</span> The toy example: is this coin fair?</h2>
+<p>It’s always best to start simple and understand our problem in the context of a toy example. An almost cliche testing ground for hypothesis testing is determining whether or not a coin is fair. Despite being overused, it will serve us well. The scenario is that you are given a coin and asked, “is this coin fair?”. A fair coin is one that when flipped, has an equal probability of showing up heads or tails.</p>
+<p><strong>Take a second to stop and think about how you would try to answer this question.</strong></p>
+<p>Step 1 has to be to collect some data. How can we know if the coin is fair if we have never seen it flipped? The path towards answering any scientific question starts with data collection. As a part of this toy example, it will be useful to work with simulated data. The great thing about simulated data is that we know everything there is to know about how the data was created. We even know the answer to any question we could hope to ask about said data. In this case, we will “flip” a hypothetical coin 10 times and print the result. You can check out the code if you want to see what this simulation looks like. You can also check out the code if you want to see if this simulated coin is fair or not (how would you tell?):</p>
+<section id="exercise-1-simulate-10-coin-flips" class="level4" data-number="5.2.0.1">
+<h4 data-number="5.2.0.1" class="anchored" data-anchor-id="exercise-1-simulate-10-coin-flips"><span class="header-section-number">5.2.0.1</span> Exercise 1: simulate 10 coin flips</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed to ensure consistent results</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">164</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Flip coins 10 times</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>flips <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">10</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> <span class="fl">0.5</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to strings of heads (1s) and tails (0s):</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>flips_HT <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(flips <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"H"</span>, <span class="st">"T"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Show results</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"10 flips of the coin yielded: "</span>, flips_HT, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>10 flips of the coin yielded:  H T H H H H T H H T </code></pre>
+</div>
+</div>
+<p>So in my simulation, I saw 7 heads and 3 tails.</p>
+<p><strong>Take some time to think about whether this is this strong evidence for or against fairness. How would you answer this question?</strong></p>
 </section>
 </section>
+<section id="assessing-a-coins-fairness" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="assessing-a-coins-fairness"><span class="header-section-number">5.3</span> Assessing a coin’s fairness</h2>
+<p>We have now collected data about our coin. Step 2 is we need to find a way to analyze this data so as to assess whether or not our hypothesis of fairness is supported by the data. To help you arrive at an idea for how to do this, I will pose and discuss answers to a set of questions:</p>
+<section id="can-you-definitively-answer-the-question" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="can-you-definitively-answer-the-question"><span class="header-section-number">5.3.1</span> Can you definitively answer the question?</h3>
+<p>In other words, would it be possible to conclusively state “yes this coin is fair” or “no this coin is unfair” with complete certainty? Put another way, what would need to be true about flipping coins for this to be possible?</p>
+<p>I would argue for this to be the case, we would need a certain kind of behavior from our coin. We would need the behavior of fair coins to always be distinct from that of unfair coins. For example, if fair coins always come up heads between 4 and 6 times when flipped 10 times, and a coin with any amount of unfairness always comes up head &lt; 4 times (if it’s biased towards tails) or &gt; 6 times (if it’s biased towards heads), then we’re set. If we see 4, 5, or 6 heads, we could automatically conclude that the coin is fair. If we see 1, 2, 3, 7, 8, 9, or 10 heads, we could automatically conclude that the coin is unfair. Any overlap in the possible outcomes of fair and unfair coins would mean that if faced with data in this realm of ambiguity, we would have no choice but to concede that we are not 100% certain that the coin is fair or unfair.</p>
+<p>Your intuition is probably telling you that this would be absurd behavior for a coin to follow. What if a coin is only a little bit biased? Let’s say it comes up heads 51% of the time. How crazy would it be for a such a coin to come up heads 4, 5, or 6 out of 10 flips? And on the other side, would you really be that blown away if a fair coin came up heads 7 times?</p>
+<p><strong>Conclusion: We can only answer the fairness question probabilistically</strong></p>
+<p>That is to say, the best we can hope to do is to determine a probability that the hypothesis of fairness is true. This fact holds true for almost all scientific inquiries.</p>
 </section>
-<section id="performing-common-tests" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Performing common tests</h1>
-<section id="z-test" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="z-test"><span class="header-section-number">7.1</span> Z-test</h2>
+<section id="how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="how-can-we-describe-the-probability-of-a-given-outcome-of-our-experiment"><span class="header-section-number">5.3.2</span> How can we describe the probability of a given outcome of our experiment?</h3>
+<p>We need to develop a statistical model for our data, like we discussed in the last unit. This means laying out assumptions for how our data is generated, and using those assumptions to figure out distributions that accuratley describe the variability in our data.</p>
+<section id="exercise-2-what-assumptions-did-you-make-in-your-simulations" class="level4" data-number="5.3.2.1">
+<h4 data-number="5.3.2.1" class="anchored" data-anchor-id="exercise-2-what-assumptions-did-you-make-in-your-simulations"><span class="header-section-number">5.3.2.1</span> Exercise 2: What assumptions did you make in your simulations?</h4>
+<p>In our case, it would be reasonable to assume the following things about your data:</p>
+<ol type="1">
+<li>Each flip of the coin is independent. This means that the probability of seeing a heads on the next flip is unaffected by what you saw on any of your previous flips.</li>
+<li>Every flip has the same probability of coming up heads. Let’s call this probability PH.</li>
+</ol>
 </section>
-<section id="t-test" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="t-test"><span class="header-section-number">7.2</span> T-test</h2>
+<section id="exercise-3-what-distribution-do-you-expect-such-data-to-follow" class="level4" data-number="5.3.2.2">
+<h4 data-number="5.3.2.2" class="anchored" data-anchor-id="exercise-3-what-distribution-do-you-expect-such-data-to-follow"><span class="header-section-number">5.3.2.2</span> Exercise 3: What distribution do you expect such data to follow?</h4>
+<p>This process of independent trials with two possible outcomes feels a lot like a binomially distributed random variable. Thus, we can use the relevant proability mass function (<code>dbinom()</code>) to assign probabilites to various outcomes. For example, give me a value of PH and N, and I can tell you the probability of seeing any number of heads, H. Here’s what these probabilities look like for a fair coin flipped 10 times:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'dplyr' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of flips</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of heads</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>PH <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of heads</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>Hs <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>N</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># P(H | N, PH)</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>pofH <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">dbinom</span>(Hs, N, <span class="at">prob =</span> PH),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">pofH =</span> pofH,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">H =</span> <span class="fu">factor</span>(Hs)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> H, <span class="at">y =</span> pofH)) <span class="sc">+</span> </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">'identity'</span>) <span class="sc">+</span> </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'H'</span>) <span class="sc">+</span> </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Pr(H)'</span>) <span class="sc">+</span> </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"PH = "</span>, PH)) <span class="sc">+</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> pofH, <span class="at">x =</span> H, <span class="at">y =</span> pofH), </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hypothesis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Are these probabilities surprising to you?</strong></p>
+<p>Some observations:</p>
+<ol type="1">
+<li>The most likely result for a fair coin is 50% heads and 50% tails.</li>
+<li>The plot is symmetric about the 50/50 result. Seeing 6 heads is as likely as seeing 4 heads, seeing 7 heads is as likely as seeing 3 heads, etc.</li>
+<li>All feasible results (0-10 flips) have some probability of occurring. This confirms our suspicion that definitively distinguishing fair and unfair coins is off the table.</li>
+<li>While seeing 5 heads is the most likely outcome, it isn’t mind-blowingly more likely than seeing 4 or 6 heads. In fact, the probability of being 1 off of perfectly even (i.e., seeing 4 OR 6 heads) is more likely than seeing exactly 5 head. 4 and 6 heads each have probability of ~0.205, making the probability of one of these events occurring ~0.410. Compare that to the probability of 5 heads, ~0.246.</li>
+</ol>
+<p>What does this plot look like for an unfair coin? Let’s set PH to 0.7 and see what happens:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of heads</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>PH <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># P(H | N, PH)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># More precision to prevent 0s</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>pofH <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">dbinom</span>(Hs, N, <span class="at">prob =</span> PH),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">digits =</span> <span class="dv">5</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">pofH =</span> pofH,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">H =</span> <span class="fu">factor</span>(Hs)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> H, <span class="at">y =</span> pofH)) <span class="sc">+</span> </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">'identity'</span>) <span class="sc">+</span> </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'H'</span>) <span class="sc">+</span> </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Pr(H)'</span>) <span class="sc">+</span> </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"PH = "</span>, PH)) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> pofH, <span class="at">x =</span> H, <span class="at">y =</span> pofH), </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hypothesis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>Compare and contrast that to the fair coin plot</em></p>
+<p>To help with comparing, let’s overlap the two:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of heads</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>PH1 <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>PH2 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># P(H | N, PH)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># More precision to prevent 0s</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>pofH1 <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(Hs, N, <span class="at">prob =</span> PH1)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>pofH2 <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(Hs, N, <span class="at">prob =</span> PH2)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">pofH =</span> <span class="fu">c</span>(pofH1, pofH2),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">H =</span> <span class="fu">factor</span>(<span class="fu">c</span>(Hs, Hs)),</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">PH =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(PH1, PH2), <span class="at">each =</span> <span class="dv">11</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> H, <span class="at">y =</span> pofH, </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> PH, <span class="at">color =</span> PH)) <span class="sc">+</span> </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">'identity'</span>,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="st">'identity'</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'chartreuse3'</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                               <span class="st">'darkslateblue'</span>)) <span class="sc">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'chartreuse3'</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                               <span class="st">'darkslateblue'</span>)) <span class="sc">+</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'H'</span>) <span class="sc">+</span> </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Pr(H)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hypothesis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observations:</p>
+<ol type="1">
+<li>The most likely result is 7 heads and 3 tails. Do you notice a pattern? In short, its no coincidence that the most likely result equates to the product of N and PH. Try setting PH to something such that PH * N is not an exact integer. Guess what number of heads will be most likely and check your intuition.</li>
+<li>The distribution is no longer symmetric. The probabilities seem to be bunching up due to there being a hard upper bound of “number of flips”.</li>
+</ol>
 </section>
-<section id="anova" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="anova"><span class="header-section-number">7.3</span> ANOVA</h2>
 </section>
-<section id="non-parametric-tests" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="non-parametric-tests"><span class="header-section-number">7.4</span> Non-parametric tests</h2>
+<section id="how-can-we-determine-the-probability-of-fairness" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="how-can-we-determine-the-probability-of-fairness"><span class="header-section-number">5.3.3</span> How can we determine the probability of fairness?</h3>
+<p>With a probability function in hand, we can now begin tackling our main challenge: determining the probability our coin is fair.</p>
+<section id="trying-the-easy-thing" class="level4" data-number="5.3.3.1">
+<h4 data-number="5.3.3.1" class="anchored" data-anchor-id="trying-the-easy-thing"><span class="header-section-number">5.3.3.1</span> Trying the easy thing</h4>
+<p>We want to know how likely our hypothesis of a fair coin is given the data we collected. We have at our disposal a probability function for our data. The easiest thing you could think to do is plug in our data and hypothesized value of PH into this formula and take the probability we get out as the probability our hypothesis is true. For 7 heads in 10 flips we get:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show results</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Pr(7 H | PH = 0.5): "</span>, <span class="fu">round</span>(<span class="fu">dbinom</span>(<span class="dv">7</span>, <span class="dv">10</span>, <span class="fl">0.5</span>), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pr(7 H | PH = 0.5):  0.117 </code></pre>
+</div>
+</div>
+<p>This seems like a reasonable ballpark. 7 heads seems a bit weird for a fair coin, and we saw a string of 4 straight heads in our dataset, which is surprising. At the same time, 10 flips isn’t much, and so a couple extra heads isn’t crazy. An 11.7% chance that our hypothesis is correct kinda <strong>feels</strong> right.</p>
+<p>Whenever we think we have an answer, its best to scrutinize it like a skeptic. What if we had flipped our coin a lot more times? Say we flipped it 100 times instead of 10. If we had gotten exactly 50 heads in this case, how confident should we be that our coin is fair? More or less than in our 7 heads in 10 flips result?</p>
+<p>Intuitively, 50 heads in 100 flips is a lot better evidence in favor of fairness than 7 heads in 10 flips. It’s more data and exactly 50% heads, vs.&nbsp;70% heads. So if we think our metric is accurately measuring the probability that our coin is fair, it should be higher in the 50/100 case. Let’s check and plug 50 heads in 100 flips to our probability function:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show results</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Pr(50 H | PH = 0.5, N = 100): "</span>, <span class="fu">round</span>(<span class="fu">dbinom</span>(<span class="dv">50</span>, <span class="dv">100</span>, <span class="fl">0.5</span>), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pr(50 H | PH = 0.5, N = 100):  0.08 </code></pre>
+</div>
+</div>
+<p>Woah, that’s lower than the 7 heads in 10 flips case! How about if we got exactly 500 heads in 1000 flips</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show results</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Pr(509 H | PH = 0.5, N = 1000): "</span>, <span class="fu">round</span>(<span class="fu">dbinom</span>(<span class="dv">500</span>, <span class="dv">1000</span>, <span class="fl">0.5</span>), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pr(509 H | PH = 0.5, N = 1000):  0.025 </code></pre>
+</div>
+</div>
+<p>It’s even lower!! That’s evidence that our strategy is missing something. What’s going on?</p>
+<p>It might be helpful to go back to our full probability function. What does it look like for a fair coin vs one possible unfair coin, each flipped 100 times?</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Probability of heads</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>PH1 <span class="ot">&lt;-</span> <span class="fl">0.7</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>PH2 <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># P(H | N, PH)</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># More precision to prevent 0s</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>pofH1 <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="at">prob =</span> PH1)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pofH2 <span class="ot">&lt;-</span> <span class="fu">dbinom</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="at">prob =</span> PH2)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">pofH =</span> <span class="fu">c</span>(pofH1, pofH2),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">H =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">100</span>, <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span>)),</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">PH =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(PH1, PH2), <span class="at">each =</span> <span class="dv">101</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> H, <span class="at">y =</span> pofH, </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> PH, <span class="at">color =</span> PH)) <span class="sc">+</span> </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">'identity'</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="st">'identity'</span>,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'chartreuse3'</span>,</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>                               <span class="st">'darkslateblue'</span>)) <span class="sc">+</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">'chartreuse3'</span>,</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>                               <span class="st">'darkslateblue'</span>)) <span class="sc">+</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'H'</span>) <span class="sc">+</span> </span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">'Pr(H)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hypothesis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we saw before, 50 heads and 50 tails is the most likely outcome for a fair coin. The problem though is that the more we flip the coin, the more possible outcomes there are. With 100 flips, everything from 40-60 heads is pretty commonly seen with a fair coin. Thus, the probability of any one of these events gets smaller and smaller with more flips.</p>
 </section>
-<section id="custom-nshting" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="custom-nshting"><span class="header-section-number">7.5</span> Custom NSHTing</h2>
+<section id="why-your-coin-isnt-fair" class="level4" data-number="5.3.3.2">
+<h4 data-number="5.3.3.2" class="anchored" data-anchor-id="why-your-coin-isnt-fair"><span class="header-section-number">5.3.3.2</span> Why your coin isn’t fair</h4>
+<p>Our first attempt forces us to reckon with something about our question of “what is the probability that our coin is fair”. We have built a model for coin flipping and decided that a fair coin is one for which a parameter in this model (PH) takes on a precise value (0.5). Does it make sense to ask such an exact question though? Can PH ever be expected to be exactly 0.5 for any coin?</p>
+<p>The point I am hinting at here is a subtlety of probability theory that trips many students up. The probability of heads for our coin should be thought of as a continuous random variable. It can take on any value between 0 and 1 on the real number line. When discussing such random variables, it doesn’t make much sense to talk about the probability of any particular value. I’ll point you to a great 3blue1brown YouTube video for more context (https://www.youtube.com/watch?v=ZA4JkHKZM50), but in short, when there are an infinite number of things that could happen (more precisely an uncountably infinite), the probability of any particular outcome is exactly 0. Thus, we can only talk about the probability that our outcome falls within a range of outcomes (e.g., heads probability between 0.45 and 0.55).</p>
+<p>Therefore, your coin isn’t fair. The probability that it is exactly fair is exactly 0. One way to navigate this challenge is to change the problem specification a bit. Instead of asking whether or not the coin is exactly fair, we need to consider a range of heads probabilities. If we have reason to believe that our coin’s probability of coming up heads falls outside of this range, then we’ll say the coin is unfair. Otherwise, we will call it fair.</p>
+</section>
+<section id="idea-2-integrating-the-likelihood-function" class="level4" data-number="5.3.3.3">
+<h4 data-number="5.3.3.3" class="anchored" data-anchor-id="idea-2-integrating-the-likelihood-function"><span class="header-section-number">5.3.3.3</span> Idea #2: Integrating the likelihood function</h4>
+<p>If it’s a range of values we need to consider, why not just sum of the value for idea #1 for a range of potential PHs? We could then look at this probability as a function of the range of PHs we choose and come to decisions about coin fairness from that.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Parameters to set</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of heads</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of flips</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Lower bound on PH range to consider</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="ot">&lt;-</span> <span class="fl">0.45</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Upper bound on PH range to consider</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="ot">&lt;-</span> <span class="fl">0.55</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Integration rectangle width</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>dPH <span class="ot">&lt;-</span> <span class="fl">0.00001</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="do">### Calculate</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>calc_integral <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">H =</span> <span class="dv">5</span>, <span class="at">N =</span> <span class="dv">10</span>, </span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>                          <span class="at">lower_bound =</span> <span class="fl">0.45</span>, <span class="at">upper_bound =</span> <span class="fl">0.55</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>                          <span class="at">dPH =</span> <span class="fl">0.00001</span>){</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  PHstosum <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> lower_bound, <span class="at">to =</span> upper_bound,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">by =</span> dPH)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  output <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(p <span class="cf">in</span> <span class="fu">seq_along</span>(PHstosum)){</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    output <span class="ot">&lt;-</span> output <span class="sc">+</span> <span class="fu">dbinom</span>(H, N, PHstosum[p])<span class="sc">*</span>dPH</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(output)</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>outcome <span class="ot">&lt;-</span> <span class="fu">calc_integral</span>(<span class="at">H=</span>H, <span class="at">N=</span>N, <span class="at">lower_bound=</span>lower_bound,</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">upper_bound=</span>upper_bound, <span class="at">dPH=</span>dPH)</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Result is: "</span>, <span class="fu">round</span>(outcome, <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Result is:  0.012 </code></pre>
+</div>
+</div>
+</section>
+<section id="considering-prior-experiencesknowledge" class="level4" data-number="5.3.3.4">
+<h4 data-number="5.3.3.4" class="anchored" data-anchor-id="considering-prior-experiencesknowledge"><span class="header-section-number">5.3.3.4</span> Considering prior experiences/knowledge</h4>
+</section>
+<section id="why-the-true-answer-is-tough" class="level4" data-number="5.3.3.5">
+<h4 data-number="5.3.3.5" class="anchored" data-anchor-id="why-the-true-answer-is-tough"><span class="header-section-number">5.3.3.5</span> Why the true answer is tough</h4>
+</section>
+<section id="the-easy-way-out-nhst-and-p-values" class="level4" data-number="5.3.3.6">
+<h4 data-number="5.3.3.6" class="anchored" data-anchor-id="the-easy-way-out-nhst-and-p-values"><span class="header-section-number">5.3.3.6</span> The easy way out: NHST and p-values</h4>
+</section>
+<section id="p-values-vs-the-actual-solution" class="level4" data-number="5.3.3.7">
+<h4 data-number="5.3.3.7" class="anchored" data-anchor-id="p-values-vs-the-actual-solution"><span class="header-section-number">5.3.3.7</span> p-values vs the actual solution</h4>
+</section>
+<section id="can-you-just-plug-and-chug-why-prdata-ph-0.5-aint-it" class="level4" data-number="5.3.3.8">
+<h4 data-number="5.3.3.8" class="anchored" data-anchor-id="can-you-just-plug-and-chug-why-prdata-ph-0.5-aint-it"><span class="header-section-number">5.3.3.8</span> Can you just plug and chug? Why Pr(data | PH = 0.5) ain’t it</h4>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+An intuition for what went wrong
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</div>
+</section>
+<section id="considering-all-possible-hypotheses" class="level4" data-number="5.3.3.9">
+<h4 data-number="5.3.3.9" class="anchored" data-anchor-id="considering-all-possible-hypotheses"><span class="header-section-number">5.3.3.9</span> Considering all possible hypotheses</h4>
+<p>Despite the flaws of Pr(H | PH = 0.5), it is on the right track. Look again at the comparison of 10 and 100 flips of a fair and 70% heads coin (figures X and Y). Focus your attention on the 50/50 bar (5 heads out of 10 or 50 heads out of 100). Compare the heights of this bar for the fair and unfair coin. What is the impact of more flips?</p>
+<p>While the absolute height of the bar for the fair coin does not tell us how likely our coin is to be fair, the relative bar heights for the fair and unfair coins seem to trend in the right direction. We are a little less than half as likely to see 5 heads in 10 flips with the 70% heads biased coin as we are with the fair coin. In 100 flips though, seeing 50 heads is WAY more likely with a fair coin than with the 70% heads coin.</p>
+<p><strong>Conclusion: P(H | PH = 0.5) does not matter on its own, what matters is its size relative to all other possible hypotheses</strong>.</p>
+<p>That’s to say, we need to calculate:</p>
+<p><span class="math display">\[
+\frac{\text{P(H | PH = 0.5)}}{\int_{0}^{1} \text{P(H | PH = x)}\,dx}
+\]</span> Integrals can be a bit of a pain in the butt to calculate. That’s part of what will motivate us to look for an easier way out. For now though, let’s see what various outcomes for 10 flips yields for this new quantity:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step size</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>dph <span class="ot">&lt;-</span> <span class="fl">0.001</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># phs to calculate value at for numerical integration</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>PH_grid <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> dph<span class="sc">/</span><span class="dv">2</span>, <span class="at">to =</span> <span class="dv">1</span> <span class="sc">-</span> dph<span class="sc">/</span><span class="dv">2</span>, <span class="at">by =</span> dph)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>subgrid <span class="ot">&lt;-</span> PH_grid[PH_grid <span class="sc">&gt;</span> <span class="fl">0.45</span> <span class="sc">&amp;</span> PH_grid <span class="sc">&lt;</span> <span class="fl">0.55</span>]</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>Hs <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>PofFair <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="at">times =</span> <span class="fu">length</span>(Hs))</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(h <span class="cf">in</span> <span class="fu">seq_along</span>(Hs)){</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  num <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(Hs[h], <span class="at">size =</span> <span class="dv">10</span>, <span class="at">prob =</span> subgrid)<span class="sc">*</span>dph)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  denom <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">dbinom</span>(Hs[h], <span class="at">size =</span> <span class="dv">10</span>, <span class="at">prob =</span> PH_grid)<span class="sc">*</span>dph)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  PofFair[h] <span class="ot">&lt;-</span> num<span class="sc">/</span>denom</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">PofFair =</span> PofFair,</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">H =</span> <span class="fu">factor</span>(Hs)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> H, <span class="at">y =</span> PofFair)) <span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> </span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span> </span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"H"</span>) <span class="sc">+</span> </span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Fairness probability (2nd try)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="hypothesis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
-<section id="challenges" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Challenges</h1>
-<section id="multiple-test-adjustment" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="multiple-test-adjustment"><span class="header-section-number">8.1</span> Multiple-test adjustment</h2>
+<section id="why-i-still-use-p-values" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="why-i-still-use-p-values"><span class="header-section-number">5.3.4</span> Why I still use p-values</h3>
+<p>Unique aspects of my use case:</p>
+<ol type="1">
+<li>Statistical pragmatism</li>
+<li>EDA and list ordering</li>
+<li>Orthogonal validation</li>
+<li>Multiple testing</li>
+</ol>
 </section>
-<section id="power" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="power"><span class="header-section-number">8.2</span> Power</h2>
 </section>
-<section id="miscalibration" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="miscalibration"><span class="header-section-number">8.3</span> Miscalibration</h2>
+<section id="performing-common-tests" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Performing common tests</h1>
+<section id="z-test" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="z-test"><span class="header-section-number">6.1</span> Z-test</h2>
+</section>
+<section id="t-test" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="t-test"><span class="header-section-number">6.2</span> T-test</h2>
+</section>
+<section id="anova" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="anova"><span class="header-section-number">6.3</span> ANOVA</h2>
+</section>
+<section id="non-parametric-tests" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="non-parametric-tests"><span class="header-section-number">6.4</span> Non-parametric tests</h2>
+</section>
+<section id="custom-nshting" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="custom-nshting"><span class="header-section-number">6.5</span> Custom NSHTing</h2>
+</section>
+</section>
+<section id="challenges" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Challenges</h1>
+<section id="multiple-test-adjustment" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="multiple-test-adjustment"><span class="header-section-number">7.1</span> Multiple-test adjustment</h2>
+</section>
+<section id="power" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="power"><span class="header-section-number">7.2</span> Power</h2>
+</section>
+<section id="miscalibration" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="miscalibration"><span class="header-section-number">7.3</span> Miscalibration</h2>
 
 
 </section>
